@@ -1,0 +1,35 @@
+.about-page {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.about-page h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.about-page h2 {
+    font-size: 1.8rem;
+    margin-top: 2rem;
+    color: var(--text-color);
+}
+
+.about-page ul {
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+}
+
+.about-page li {
+    line-height: 1.6;
+}
+
+.about-page p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.predictor {
+    text-decoration: underline;
+}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/sign_up.css') }}">
+{% endblock css %}
+
+{% block content %}
+<div class="form-container-base signup-container"> {# Added new base class, and signup specific class #}
+    <form action="" method="post" class="signup-form standard-form">
+        {{ form.hidden_tag() }}
+
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.name.label(class="form-label") }}
+                {{ form.name(class="form-input") }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.userid.label(class="form-label") }}
+                {{ form.userid(class="form-input") }}
+            </div>
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-input") }}
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input") }}
+                {% for error in form.confirm_password.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label(class="form-label") }}
+                {{ form.confirm_password(class="form-input") }}
+                {% for error in form.confirm_password.errors %}
+                    <div class="error-message">{{ error }}</div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.submit(class="form-primary-button signup-button-width") }}
+            </div>
+        </div>
+
+        <div class="form-link-text">
+            Already have an account? <a href="{{ url_for('login') }}" class="form-link-text-link">Login</a>
+        </div>
+    </form>
+</div>
+{% endblock content %}

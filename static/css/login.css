@@ -1,0 +1,123 @@
+/* === Login Form Specific Styling (login.css) === */
+
+/* Overrides for the login form container to match image_76d120.png */
+.login-container {
+    background-color: var(--nav-footer-bg); /* Warm background like in the image */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    max-width: 450px; /* Slightly narrower than signup */
+    margin-top: 2rem; /* Adjust if needed for vertical centering */
+}
+
+/* Label colors */
+.form-label {
+    color: var(--accent-color); /* Warm caramel label color */
+}
+
+/* Button colors to match image_76d120.png */
+.login-button-width {
+    width: 40%; /* As seen in image_76d120.png */
+    background-color: var(--text-color); /* Dark brown button background */
+    color: var(--bg-color); /* Light text on button */
+}
+
+.login-button-width:hover {
+    background-color: var(--link-hover); /* Lighter accent color on hover */
+    color: var(--bg-color); /* Creamy text on hover */
+}
+
+/* Footer link text colors */
+.form-link-text {
+    color: var(--text-color); /* Dark brown general text */
+}
+
+.form-link-text-link { /* For the <a> tag within .form-link-text */
+    color: var(--text-color); /* Warm caramel link color */
+}
+
+.form-link-text-link:hover {
+    color: var(--link-hover);
+}
+
+/* ==== Login Tab Styling (Unique to Login Page) ==== */
+.login-tab-header {
+    display: flex;
+    /* Removed justify-content: center here if flex: 1 on buttons makes them take full width */
+    /* Instead, we'll ensure they have a defined max-width and then center the header */
+    margin-bottom: 0; /* Tabs visually connect to form, no gap */
+    gap: 0; /* No gap between buttons */
+    width: 100%; /* Ensure tabs span full width for better positioning */
+    position: relative;
+    z-index: 3; /* Ensure tabs are on top of form content */
+    /* Add max-width and margin: auto to center the header itself */
+    max-width: 300px; /* Adjust this value if needed, based on how wide you want the tab group to be */
+    margin-left: auto;
+    margin-right: auto;
+    /* Temporarily remove the justify-content: center; from here, as flex:1 on child buttons can conflict */
+}
+.login-tab-btn {
+    flex: 1; /* Keep flex: 1 if you want them to fill the max-width of the header */
+    /* OR, set a fixed width if you want them smaller */
+    padding: 0.75rem 1rem;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 8px 8px 0px 0px; /* Rounded top corners */
+    font-size: 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-bottom: 2px solid var(--accent-color); /* Inactive tab bottom border */
+}
+/* Updated: Inactive Email Tab (Now uses var(--input-bg) for background) */
+.login-tab-btn[data-tab="email-tab"]:not(.active) {
+    background-color: var(--bg-color); /* Should be beige when inactive */
+    color: var(--text-color); /* Dark brown text */
+}
+/* Updated: Inactive User ID Tab (Now uses var(--input-bg) for background) */
+.login-tab-btn[data-tab="userid-tab"]:not(.active) {
+    background-color: var(--bg-color); /* Should be beige when inactive */
+    color: var(--text-color); /* Dark brown text */
+}
+
+/* Active Tab */
+.login-tab-btn.active {
+    background-color: var(--nav-footer-bg); /* Active tab matches form background */
+    color: var(--accent-color); /* Active tab text is accent color */
+    border-bottom: 2px solid transparent; /* Hide bottom border on active tab */
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Subtle shadow */
+    z-index: 4; /* Ensure active tab is on top */
+}
+.login-tab-btn:hover:not(.active) {
+    background-color: var(--link-hover);
+    color: var(--bg-color);
+}
+
+/* Styles for the tab content forms */
+.tab-content {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    display: none;
+    /* Adjust to visually connect with the tabs */
+    margin-top: -10px; /* Pull the form slightly up to overlap the tab border */
+    padding-top: 1rem; /* Add some padding back to compensate */
+    position: relative;
+    z-index: 1; /* Form content below tabs */
+}
+.tab-content.active {
+    display: flex; /* Make it a flex container to apply standard-form layout */
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive overrides specific to login form */
+@media (max-width: 480px) {
+    .login-container {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .login-button-width {
+        width: 80%; /* Wider button on smaller screens */
+    }
+}

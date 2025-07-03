@@ -1,0 +1,144 @@
+.book-details-wrapper {
+    max-width: 1100px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--nav-footer-bg);
+    color: var(--test-color);
+    border-radius: 1rem;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.cover-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.cover-container img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 1rem;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    display: block;
+    margin: 0 auto;
+}
+
+.book-title {
+    font-size: 2rem;
+}
+
+.details-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    gap: 2rem;
+}
+
+.details-grid .column {
+    flex: 1;
+    min-width: 200px;
+    text-align: center;
+}
+
+.details-grid .column p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+}
+
+.column p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+
+.column strong {
+    color: #ffd479;
+    font-weight: 600;
+}
+
+.star-rating {
+    font-size: 1.2rem;
+    color: #ffd700;
+}
+
+.star {
+    margin-right: 2px;
+}
+
+.star.full {
+    color: #ffd700;
+}
+
+.star.half {
+    position: relative;
+    display: inline-block;
+    color: #ffd700;
+}
+.star.half::before {
+    content: '\2605';
+    position: absolute;
+    left: 0;
+    width: 50%;
+    overflow: hidden;
+    color: #ffd700;
+}
+
+.star-rating .numeric-rating {
+    margin-left: 6px;
+    color: #ccc;
+    font-size: 0.95rem;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3.5rem;
+}
+
+.action-buttons .btn {
+    padding: 0.6rem 1.4rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: white;
+    transition: background 0.3s ease;
+}
+
+.btn.edit {
+    background-color: #007bff;
+}
+
+.btn.edit:hover {
+    background-color: #0056b3;
+}
+
+.btn.delete {
+    background-color: #dc3545;
+}
+
+.btn.delete:hover {
+    background-color: #a71d2a;
+}
+
+/* Responsive layout for mobile */
+@media (max-width: 900px) {
+    .details-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .column {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #444;
+        width: 100%;
+    }
+
+    .column:last-child {
+        border-bottom: none;
+    }
+}
