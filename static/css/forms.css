@@ -1,0 +1,135 @@
+/* === Common Form Structural Styling (forms.css) === */
+
+/* Main container for all forms - structural properties only */
+.form-container-base { /* New base class for structural container properties */
+    width: 100%;
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 1rem;
+    position: relative;
+}
+
+/* Base style for the form element itself */
+.standard-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    text-align: center;
+}
+
+/* For rows with multiple inputs */
+.form-row {
+    display: flex;
+    gap: 1rem; /* Space between inputs in the same row */
+    align-items: flex-end; /* Align inputs at the bottom if labels are different heights */
+}
+
+/* For rows with a single input or to center contents */
+.form-row.single {
+    justify-content: center;
+}
+
+/* Individual form field group (label + input) */
+.form-group {
+    flex: 1; /* Allows form groups to take equal space in a flex row */
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    display: block;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    height: auto; /* Let content and padding define height */
+}
+
+/* Primary button style - Structural properties */
+.form-primary-button {
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: block; /* Ensures it's a block-level element for `margin: auto` */
+    margin: 1.5rem auto 0; /* Top margin and horizontal centering */
+    width: 60%; /* Default width - can be overridden */
+    max-width: 300px; /* Prevents button from getting too wide on large screens */
+}
+
+/* Styling for "Don't have an account?" type links - Structural properties */
+.form-link-text {
+    text-align: center;
+    margin-top: 1.5rem; /* Consistent spacing below buttons */
+    font-size: 0.9rem;
+    /* Color will be set by specific form CSS */
+}
+
+.form-link-text-link { /* For the <a> tag within .form-link-text */
+    text-decoration: underline;
+    transition: color 0.3s ease;
+    font-size: 1rem; /* Make the link slightly larger for readability */
+    /* Color will be set by specific form CSS */
+}
+
+/* Error messages */
+.error-message {
+    color: red; /* Or a specific danger color from theme */
+    font-size: 0.9rem;
+    margin-top: 4px;
+    text-align: center; /* Align error message with input */
+}
+
+/* Force consistent styling for number/decimal input */
+.form-input[type="number"],
+.form-input[type="text"],
+.form-input[type="email"],
+.form-input {
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  border: 2px solid var(--input-border);
+  border-radius: 8px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  box-sizing: border-box;
+  appearance: none;
+}
+
+.form-input[type="number"]::-webkit-inner-spin-button,
+.form-input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Responsive tweaks for all forms - structural only */
+@media (max-width: 640px) {
+    .form-row {
+        flex-direction: column; /* Stack inputs vertically on small screens */
+    }
+    .form-input {
+        width: 100%; /* Ensure inputs take full width when stacked */
+    }
+    .form-primary-button {
+        width: 80%; /* Button can be wider on smaller screens */
+    }
+    .form-container-base {
+        margin: 1rem; /* Less margin on very small screens */
+        padding: 1rem;
+        border-radius: 0.5rem;
+        box-shadow: none; /* Remove shadow for full-width mobile forms */
+    }
+}

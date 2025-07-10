@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock css %}
+
+{% block content %}
+<div class="form-container-base login-container"> {# Use base class, and login specific class #}
+    <div class="login-tab-header">
+        <button class="login-tab-btn active" data-tab="email-tab">Email</button>
+        <button class="login-tab-btn" data-tab="userid-tab">User ID</button>
+    </div>
+
+    <form method="POST" action="{{ url_for('login') }}" class="standard-form tab-content email-tab active">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="mode" value="email">
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-input") }}
+            </div>
+        </div>
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input") }}
+            </div>
+        </div>
+
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.submit(class="form-primary-button login-button-width") }}
+            </div>
+        </div>
+        <div class="form-link-text">Don't have an account?
+            <a href="{{ url_for('sign_up') }}" class="form-link-text-link">Create account</a>
+        </div>
+    </form>
+
+    <form method="POST" action="{{ url_for('login') }}" class="standard-form tab-content userid-tab">
+        {{ form.hidden_tag() }}
+        <input type="hidden" name="mode" value="userid">
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.userid.label(class="form-label") }}
+                {{ form.userid(class="form-input") }}
+            </div>
+        </div>
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.password.label(class="form-label") }}
+                {{ form.password(class="form-input") }}
+            </div>
+        </div>
+
+        <div class="form-row single">
+            <div class="form-group">
+                {{ form.submit(class="form-primary-button login-button-width") }}
+            </div>
+        </div>
+        <div class="form-link-text">Don't have an account?
+            <a href="{{ url_for('sign_up') }}" class="form-link-text-link">Create account</a>
+        </div>
+    </form>
+</div>
+{% endblock content %}
+
+{% block script %}
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock script %}

@@ -1,0 +1,346 @@
+/* base.css */
+:root {
+  --bg-color: #FFF8DC;
+  --text-color: #4e3d2e;
+  --accent-color: #6d4d33;          
+  --nav-footer-bg: #b0875e;
+  --link-hover: #412b18;     
+}
+
+.dark {
+  --bg-color: #2C2727;
+  --text-color: #D8B08C;
+  --accent-color: #ffd479;
+  --nav-footer-bg: #4A4545;
+  --link-hover: #9a7352;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    background-color: var(--bg-color);
+    border: 1px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+textarea:focus {
+    outline: 1px solid var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 4px var(--accent-color);
+}
+
+/* === Base === */
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--accent-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+a:hover {
+    color: var(--link-hover);
+}
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* === Navbar === */
+.navbar {
+    background-color: var(--nav-footer-bg);
+    color: var(--accent-color);
+    padding: 1rem 2rem;
+    position: relative;
+    z-index: 50;
+}
+.navbar-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: nowrap;
+}
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.branding {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 24px;
+}
+.brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+.logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 10px;
+}
+
+/* === Nav Links === */
+.nav-links {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+.nav-links a {
+    text-align: center;
+    white-space: nowrap;
+    padding: 0.5rem 0.8rem;
+    border-radius: 5px;
+}
+.nav-links a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* === Drop Down === */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-toggle {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+  padding: 0 10px;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: var(--bg-color);
+  min-width: 150px;
+  z-index: 1000;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 15px;
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: normal;
+  font-size: medium;
+}
+
+.dropdown-item:hover {
+  background-color: var(--accent-light);
+}
+
+/* === Mobile Controls (only small screen) === */
+.mobile-controls {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+}
+.theme-toggle {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: background-color 0.2s ease;
+}
+.theme-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.menu-btn {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--accent-color);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+.menu-btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+.fa.fa-moon {
+    width: 5px;
+    height: 5px;
+}
+
+/* === Responsive === */
+@media (min-width: 768px) {
+    .nav-links {
+        display: flex !important;
+        flex-direction: row;
+        justify-content: flex-end;
+        margin-top: 0;
+        position: static;
+        background-color: transparent;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+    }
+    .mobile-controls {
+        display: none;
+    }
+    .desktop-only {
+        display: inline-block;
+    }
+    .navbar-right {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .navbar-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    .mobile-controls {
+        display: flex;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: var(--nav-footer-bg); 
+        padding: 1rem 2rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0 0 8px 8px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.8rem; 
+        z-index: 40;
+        transition: all 0.3s ease-out;
+        transform: translateY(-10px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* When 'show' class is added (menu clicked) */
+    .nav-links.show {
+        display: flex;
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .navbar-right {
+        display: contents;
+    }
+}
+
+/* === Flash Messages === */
+#flash-container {
+    position: relative;
+    width: 100%;
+    z-index: 60;
+}
+.flash-message {
+    position: sticky;
+    top: 80px;
+    width: 100%;
+    border-radius: 10px;
+    padding: 1px 1px;
+    padding-top: 16px;
+    font-size: 1rem;
+    text-align: center;
+    z-index: 999;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    animation: fadeInDown 0.4s ease;
+    transition: opacity 0.5s ease;
+}
+.flash-message.fade-out {
+    opacity: 0;
+}
+.flash-message.danger { background-color: #FCA5A5; color: #7F1D1D; }
+.flash-message.warning { background-color: #FDE68A; color: #92400E; }
+.flash-message.info { background-color: #BFDBFE; color: #1D4ED8; }
+.flash-message.success { background-color: #86EFAC; color: #065F46; }
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* === Main Content Area === */
+.main-content {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* === Footer === */
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+.footer {
+    background-color: var(--nav-footer-bg);
+    color: var(--text-color);
+    padding: 2rem 1rem;
+}
+.footer-container h2 {
+    color: var(--accent-color);
+    font-size: 1.5rem;
+}
+.footer-container p {
+    font-size: 0.875rem;
+    color: var(--text-color);
+}
+
+/* === Social Icons === */
+.social-links {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+}
+.icon {
+    font-size: 2rem;
+    color: var(--accent-color);
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+.icon:hover {
+    transform: scale(1.1);
+    color: var(--link-hover);
+}
