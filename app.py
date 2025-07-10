@@ -14,7 +14,7 @@ from sqlalchemy.exc import IntegrityError
 from forms import Book, Login, SignUp, Data
 from models import Record, User, db
 
-load_dotenv("")
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
