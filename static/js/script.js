@@ -50,4 +50,4 @@ setTimeout(() => {
     flash.classList.add('fade-out');
     setTimeout(() => flash.remove(), 500); // Clean up
   }
-}, 4000); // 4 seconds
+}, 3000); // 3 seconds
