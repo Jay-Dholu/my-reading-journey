@@ -1,7 +1,7 @@
 /* === Common Form Structural Styling (forms.css) === */
 
 /* Main container for all forms - structural properties only */
-.form-container-base { /* New base class for structural container properties */
+.form-container-base {
     width: 100%;
     max-width: 600px;
     margin: 2rem auto;
@@ -10,7 +10,6 @@
     position: relative;
 }
 
-/* Base style for the form element itself */
 .standard-form {
     display: flex;
     flex-direction: column;
@@ -18,7 +17,6 @@
     text-align: center;
 }
 
-/* For rows with multiple inputs */
 .form-row {
     display: flex;
     gap: 1rem; /* Space between inputs in the same row */
@@ -115,21 +113,20 @@
   margin: 0;
 }
 
-/* Responsive tweaks for all forms - structural only */
 @media (max-width: 640px) {
     .form-row {
-        flex-direction: column; /* Stack inputs vertically on small screens */
+        flex-direction: column;
     }
     .form-input {
-        width: 100%; /* Ensure inputs take full width when stacked */
+        width: 100%;
     }
     .form-primary-button {
-        width: 80%; /* Button can be wider on smaller screens */
+        width: 80%;
     }
     .form-container-base {
-        margin: 1rem; /* Less margin on very small screens */
+        margin: 1rem;
         padding: 1rem;
         border-radius: 0.5rem;
-        box-shadow: none; /* Remove shadow for full-width mobile forms */
+        box-shadow: none;
     }
 }
