@@ -48,6 +48,51 @@ setTimeout(() => {
   const flash = document.querySelector('.flash-message');
   if (flash) {
     flash.classList.add('fade-out');
-    setTimeout(() => flash.remove(), 500); // Clean up
+    setTimeout(() => flash.remove(), 500);
   }
-}, 3000); // 3 seconds
+}, 4000); // 4 seconds
+
+function filterBooks() {
+    const search = document.getElementById("searchBar").value.toLowerCase();
+    const cards = document.querySelectorAll(".book-card");
+
+    cards.forEach(card => {
+        const title = card.dataset.title;
+        const author = card.dataset.author;
+        card.style.display = (title.includes(search) || author.includes(search)) ? "block" : "none";
+    });
+}
+
+function sortBooks() {
+    const value = document.getElementById("sortBy").value;
+    const grid = document.getElementById("bookGrid");
+    const cards = Array.from(grid.querySelectorAll(".book-card"));
+
+    let [field, direction] = value.split("-");
+
+    cards.sort((a, b) => {
+        let valA = a.dataset[field];
+        let valB = b.dataset[field];
+
+        if (field === 'date') {
+            return direction === 'asc' ? new Date(valA) - new Date(valB) : new Date(valB) - new Date(valA);
+        }
+
+        return direction === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
+    });
+
+    grid.innerHTML = "";
+    cards.forEach(card => grid.appendChild(card));
+
+    // Optional: Store in sessionStorage
+    sessionStorage.setItem("lastSort", value);
+}
+
+// Optional: Restore last sort
+window.onload = function () {
+    const lastSort = sessionStorage.getItem("lastSort");
+    if (lastSort) {
+        document.getElementById("sortBy").value = lastSort;
+        sortBooks();
+    }
+};
