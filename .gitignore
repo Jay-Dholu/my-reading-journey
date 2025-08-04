@@ -1,0 +1,33 @@
+# Byte-compiled / cache files
+__pycache__/
+*.py[cod]
+*.class
+
+# Environment
+.env
+.venv/
+env/
+venv/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Node (if using)
+node_modules/
+
+# Python packaging
+*.egg-info/
+dist/
+build/
+
+# Flask cache
+instance/
+*.db
