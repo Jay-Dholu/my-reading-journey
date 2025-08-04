@@ -6,12 +6,27 @@
 
 {% block content %}
 <div class="home-page">
-    <h2 class="section-heading">My Books</h2>
+    <div class="heading-and-functionalities d-flex justify-content-between align-items-center flex-wrap mb-4">
+        <h2 class="section-heading pl-12">My Books</h2>
+        <div class="search-sort-bar d-flex align-items-center flex-wrap">
+            <input type="text" id="searchBar" class="input-form-control outline outline-var(--accent-color) mb-2 me-2" placeholder="Search by author or title..." onkeyup="filterBooks()">
+
+            <select id="sortBy" class="form-select mb-2" onchange="sortBooks()">
+                <option value="">Sort By</option>
+                <option value="title-asc">Title ↑</option>
+                <option value="title-desc">Title ↓</option>
+                <option value="author-asc">Author ↑</option>
+                <option value="author-desc">Author ↓</option>
+                <option value="date-asc">Date added ↑</option>
+                <option value="date-desc">Date added ↓</option>
+            </select>
+        </div>
+    </div>
 
     {% if books %}
-        <div class="book-grid">
+        <div class="book-grid" id="bookGrid">
             {% for book in books %}
-                <div class="book-card">
+                <div class="book-card" data-title="{{ book.title|lower }}" data-author="{{ book.author|lower }}" data-date="{{ book.reading_started.strftime('%Y-%m-%d') if book.reading_started else '1900-01-01' }}">
                     <a href="{{ url_for('view_book', book_id=book.id) }}">
                         {% if book.cover_image %}
                             <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}" alt="{{ book.title }} Cover">
@@ -33,4 +48,3 @@
     {% endif %}
 </div>
 {% endblock %}
-
