@@ -1,7 +1,6 @@
 import os
 import json
 from datetime import datetime, timedelta
-from dotenv import load_dotenv
 
 from flask import Flask, session, flash, redirect, render_template, url_for, make_response
 from flask_wtf.csrf import CSRFProtect
@@ -14,11 +13,10 @@ from sqlalchemy.exc import IntegrityError
 from forms import Book, Login, SignUp, Data
 from models import Record, User, db
 
-load_dotenv("sec_key.env")
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///user.db"
+app.config['SECRET_KEY'] = "SmF5IGlzIGtpbmcgb2YgdGhlIHVuaXZlcnNlLiBIZSBpcyB1bmRlZmVhdGFibGUsIGV2ZW4gYnkgQWxpZW5zLg=="
+app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///myreadingjourney.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=2)
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
@@ -31,21 +29,31 @@ with app.app_context():
     db.create_all()
 
 
+@app.before_request
+def check_user_session():
+    if 'user_id' in session:
+        user = User.query.get(session['user_id'])
+        if not user:
+            session.clear()
+            flash("Your session was invalid and has been cleared. Please log in again.", "warning")
+
+
 @app.route("/")
 @app.route("/home")
 def home():
     json_form = Data()
-    if not session.get('user_id'):
-        flash("Please log in to add a book.", "warning")
-        return redirect(url_for('login'))
-
     user_id = session.get('user_id')
     books = []
 
-    if user_id:
-        user = User.query.get(user_id)
-        if user:
-            books = Record.query.filter_by(user_id=user.id).order_by(Record.reading_started.desc()).all()
+    if not user_id:
+        flash("Please log in to add a book.", "warning")
+        return redirect(url_for('login'))
+
+    user = User.query.get(user_id)
+
+    if user:
+        books = Record.query.filter_by(user_id=user.id).order_by(Record.reading_started.asc()).all()
+        print(f"User ID: {user.id}, Books found: {len(books)}")
 
     return render_template("index.html", title="Home | My Reading Journey", books=books, json_form=json_form)
 
@@ -98,30 +106,34 @@ def login():
     form = Login()
     json_form = Data()
 
-    if form.validate_on_submit():
-        user = None
-        identifier = None
+    try:
+        if form.validate_on_submit():
+            user = None
+            login_type = None
+            
+            if form.email.data:
+                user = User.query.filter_by(email=form.email.data).first()
+                login_type = 'Email'
+            elif form.userid.data:
+                user = User.query.filter_by(userid=form.userid.data).first()
+                login_type = 'User ID'
 
-        if form.email.data:
-            user = User.query.filter_by(email=form.email.data).first()
-            identifier = "email"
-        elif form.userid.data:
-            user = User.query.filter_by(userid=form.userid.data).first()
-            identifier = "userid"
+            if user:
+                if check_password_hash(user.password, form.password.data):
+                    session['user_id'] = user.id
+                    session.permanent = True
+                    flash(f"Welcome {user.name}", "success")
+                    return redirect(url_for('home'))
+                else:
+                    flash("Incorrect password. Please try again.", "danger")
+            else:
+                flash(f"User does not exist. Please check your {login_type}.", "danger")
 
-        if not user:
-            flash(f"{identifier.title().replace('id', ' ID')} does not exist!", "warning")
-            return redirect(url_for('login'))
-
-        if user and check_password_hash(user.password, form.password.data):
-            session['user_id'] = user.id
-            session.permanent = True
-            flash(f"Welcome {user.name}", "success")
-            return redirect(url_for('home'))
-        else:
-            flash("Invalid credentials.", "danger")
-
-    return render_template("login.html", title='Login | My Reading Journey', form=form, json_form=json_form)
+        return render_template("login.html", title='Login | My Reading Journey', form=form, json_form=json_form)
+    
+    except Exception as e:
+        flash("Please enter valid email or userid to log in.", "danger")
+        return redirect(url_for('login'))
 
 
 @app.route("/logout")
@@ -156,6 +168,7 @@ def add_book():
         new_book = Record(
             title=form.title.data,
             author=form.author.data,
+            isbn=form.isbn.data,
             genre=form.genre.data,
             rating=form.rating.data,
             description=form.description.data,
@@ -167,6 +180,7 @@ def add_book():
         db.session.add(new_book)
         db.session.commit()
         flash("Book added successfully!", "success")
+
         return redirect(url_for('home'))
     
     return render_template("add_book.html", title="Add Book | My Reading Journey", json_form=json_form, form=form)
@@ -181,6 +195,7 @@ def edit_book(book_id):
     if form.validate_on_submit():
         book.title = form.title.data
         book.author = form.author.data
+        book.isbn = form.isbn.data
         book.genre = form.genre.data
         book.rating = form.rating.data
         book.description = form.description.data
@@ -198,6 +213,7 @@ def edit_book(book_id):
 
         db.session.commit()
         flash("Book updated successfully!", "success")
+
         return redirect(url_for("home"))
 
     return render_template("edit_book.html", title='Edit | My Reading Journey', json_form=json_form, form=form, book=book)
@@ -215,6 +231,7 @@ def delete_book(book_id):
     db.session.delete(book)
     db.session.commit()
     flash(f"Book '{name}' deleted successfully!", "success")
+
     return redirect(url_for('home'))
 
 
@@ -222,6 +239,7 @@ def delete_book(book_id):
 def view_book(book_id):
     book = Record.query.get_or_404(book_id)
     json_form = Data()
+
     return render_template('book_details.html', title=f'{book.title} | My Reading Journey', book=book, json_form=json_form)
 
 
@@ -244,6 +262,7 @@ def download_books():
             "title": book.title,
             "author": book.author if book.author else None,
             "genre": book.genre if book.genre else None,
+            "isbn": book.isbn if book.isbn else None,
             "rating": book.rating if book.rating else None,
             "description": book.description if book.description else None,
             "reading_started": book.reading_started.isoformat() if book.reading_started else None,
@@ -254,6 +273,7 @@ def download_books():
     response = make_response(json.dumps(book_data, indent=4))
     response.headers["Content-Disposition"] = "attachment; filename=books_backup.json"
     response.headers["Content-Type"] = "application/json"
+
     return response
 
 
@@ -268,53 +288,55 @@ def upload_books():
         file = form.json_file.data
 
         try:
-            data = json.load(file)
-        except json.JSONDecodeError:
-            flash("Invalid JSON format.", "danger")
+            data = json.load(file.stream)    # using text mode to read file
+        except (json.JSONDecodeError, UnicodeDecodeError):
+            flash("Invalid JSON format. The file could not be read.", "danger")
             return redirect(url_for("home"))
 
         user_id = session["user_id"]
-
+        book_count = 0
         for entry in data:
-            title = entry.get("title") or None
-            author = entry.get("author") or None
-            genre = entry.get("genre") or None
-            description = entry.get("description") or None
-            cover_image = entry.get("cover_image") or None
-            rating = entry.get("rating")
+            title = entry.get("title")
+            if not title:
+                continue
 
-            try:
-                rating = float(rating) if rating is not None else 0.0
-            except ValueError:
-                rating = 0.0
-
-            def parse_date(value):
-                try:
-                    return datetime.fromisoformat(value) if value else None
-                except (ValueError, TypeError):
-                    return None
-
-            reading_started = parse_date(entry.get("reading_started"))
-            reading_finished = parse_date(entry.get("reading_finished"))
+            isbn_raw = entry.get("isbn")
+            isbn = isbn_raw.strip() if isinstance(isbn_raw, str) else None
 
             new_book = Record(
                 title=title,
-                author=author,
-                genre=genre,
-                rating=rating,
-                description=description,
-                cover_image=cover_image,
-                reading_started=reading_started,
-                reading_finished=reading_finished,
+                author=entry.get("author"),
+                isbn=isbn,
+                genre=entry.get("genre"),
+                rating=float(entry.get("rating", 0.0) or 0.0),
+                description=entry.get("description"),
+                cover_image=entry.get("cover_image"),
+                reading_started=datetime.fromisoformat(entry["reading_started"]) if entry.get(
+                    "reading_started") else None,
+                reading_finished=datetime.fromisoformat(entry["reading_finished"]) if entry.get(
+                    "reading_finished") else None,
                 user_id=user_id
             )
             db.session.add(new_book)
+            book_count += 1
 
-        db.session.commit()
-        flash("Data uploaded successfully!", "success")
+        try:
+            db.session.commit()
+            flash(f"{book_count} book(s) uploaded successfully!", "success")
+        except IntegrityError as e:
+            db.session.rollback()
+            flash(f"Database error: {e}. Please check your data for issues (e.g., duplicate unique fields).", "danger")
+        except Exception as e:
+            db.session.rollback()
+            flash(f"An unexpected error occurred: {e}", "danger")
+
         return redirect(url_for("home"))
+    
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{error}", "danger")
 
-    flash("Upload failed. Please ensure file is valid JSON.", "danger")
     return redirect(url_for("home"))
 
 

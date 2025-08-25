@@ -21,9 +21,10 @@ class Record(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     author = db.Column(db.String(100), nullable=True)
+    isbn = db.Column(db.String(20), nullable=True)
     genre = db.Column(db.String(50), nullable=True)
     description = db.Column(db.Text, nullable=True)
-    cover_image = db.Column(db.String(200), nullable=True)  # path to uploaded image
+    cover_image = db.Column(db.String(200), nullable=True)  # this will have 'path' to uploaded image
     rating = db.Column(db.Float, nullable=True)
     reading_started = db.Column(db.DateTime(timezone=True), nullable=True, default=lambda: datetime.now(ist))
     reading_finished = db.Column(db.DateTime(timezone=True), nullable=True)

@@ -1,50 +1,226 @@
 {% extends "base.html" %}
 
 {% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-{% endblock css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
 
 {% block content %}
-<div class="home-page">
-    <div class="heading-and-functionalities d-flex justify-content-between align-items-center flex-wrap mb-4">
-        <h2 class="section-heading pl-12">My Books</h2>
-        <div class="search-sort-bar d-flex align-items-center flex-wrap">
-            <input type="text" id="searchBar" class="input-form-control outline outline-var(--accent-color) mb-2 me-2" placeholder="Search by author or title..." onkeyup="filterBooks()">
-
-            <select id="sortBy" class="form-select mb-2" onchange="sortBooks()">
-                <option value="">Sort By</option>
-                <option value="title-asc">Title ↑</option>
-                <option value="title-desc">Title ↓</option>
-                <option value="author-asc">Author ↑</option>
-                <option value="author-desc">Author ↓</option>
-                <option value="date-asc">Date added ↑</option>
-                <option value="date-desc">Date added ↓</option>
-            </select>
+<div class="home-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">My Reading Journey</h1>
+            <p class="hero-subtitle">Discover, track, and cherish every book you read</p>
+            {% if not session.get('user_id') %}
+            <div class="hero-actions">
+                <a href="/sign_up" class="btn btn-primary btn-lg">
+                    <i class="bx bx-user-plus"></i>
+                    Get Started
+                </a>
+                <a href="/login" class="btn btn-secondary btn-lg">
+                    <i class="bx bx-log-in"></i>
+                    Sign In
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="hero-visual">
+            <div class="floating-book">
+                <i class="bx bx-book-open"></i>
+            </div>
+            <div class="floating-star star-1">✨</div>
+            <div class="floating-star star-2">⭐</div>
+            <div class="floating-star star-3">✨</div>
         </div>
     </div>
 
-    {% if books %}
-        <div class="book-grid" id="bookGrid">
-            {% for book in books %}
-                <div class="book-card" data-title="{{ book.title|lower }}" data-author="{{ book.author|lower }}" data-date="{{ book.reading_started.strftime('%Y-%m-%d') if book.reading_started else '1900-01-01' }}">
-                    <a href="{{ url_for('view_book', book_id=book.id) }}">
-                        {% if book.cover_image %}
-                            <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}" alt="{{ book.title }} Cover">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='uploads/default.jpg') }}" alt="Default Book Cover">
-                        {% endif %}
-                        <h3>{{ book.title }}</h3>
-                        <p><strong>Author:</strong> {{ book.author }}</p>
-                        <div class="book-actions">
-                            <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn edit">Edit</a>
-                            <a href="{{ url_for('delete_book', book_id=book.id) }}" class="btn delete">Delete</a>
-                        </div>
-                    </a>
+    {% if session.get('user_id') %}
+    <!-- Books Section -->
+    <div class="books-section">
+        <!-- Section Header -->
+        <div class="section-header">
+            <div class="section-title">
+                <h2>Your Library</h2>
+                <p class="section-subtitle">
+                    {% if books %}
+                    {{ books|length }} book{{ 's' if books|length != 1 else '' }} in your collection
+                    {% else %}
+                    Your reading adventure starts here
+                    {% endif %}
+                </p>
+            </div>
+
+            {% if books %}
+            <!-- Search and Filter Controls -->
+            <div class="controls-section">
+                <div class="search-container">
+                    <div class="search-box">
+                        <i class="bx bx-search"></i>
+                        <input type="text" id="searchBar" placeholder="Search books or authors..."
+                            onkeyup="filterBooks()">
+                    </div>
                 </div>
+
+                <div class="filter-controls">
+                    <div class="sort-container">
+                        <select id="sortBy" onchange="sortBooks()" class="sort-select">
+                            <option value="date-asc" selected>Oldest First</option>
+                            <option value="date-desc">Recently Added / Newest</option>
+                            <option value="title-asc">Title A-Z</option>
+                            <option value="title-desc">Title Z-A</option>
+                            <option value="author-asc">Author A-Z</option>
+                            <option value="author-desc">Author Z-A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if books %}
+        <!-- Books Grid -->
+        <div class="books-grid" id="bookGrid">
+            {% for book in books %}
+            <article class="book-card fade-in" data-title="{{ book.title|lower }}"
+                data-author="{{ (book.author or '')|lower }}"
+                data-date="{{ book.reading_started.strftime('%Y-%m-%d') if book.reading_started else '1900-01-01' }}">
+
+                <div class="book-cover">
+                    {% if book.cover_image %}
+                    <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}"
+                        alt="{{ book.title }} Cover" class="cover-image">
+                    {% else %}
+                    <div class="cover-placeholder">
+                        <i class="bx bx-book"></i>
+                        <span>{{ book.title[:1] }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="book-content">
+                    <div class="book-info">
+                        <h3 class="book-title">
+                            <a href="{{ url_for('view_book', book_id=book.id) }}">{{ book.title }}</a>
+                        </h3>
+
+                        {% if book.author %}
+                        <p class="book-author">by {{ book.author }}</p>
+                        {% endif %}
+                    </div>
+
+                    {% if book.rating and book.rating > 0 %}
+                    <div class="book-rating">
+                        <div class="stars">
+                            {% set full_stars = book.rating|int %}
+                            {% set has_half = 0.5 <= (book.rating - full_stars) < 1 %} {% set empty_stars=5 - full_stars
+                                - (1 if has_half else 0) %} {% for _ in range(full_stars) %}<i class="bx bxs-star">
+                                </i>{% endfor %}
+                                {% if has_half %}<i class="bx bxs-star-half"></i>{% endif %}
+                                {% for _ in range(empty_stars) %}<i class="bx bx-star"></i>{% endfor %}
+                        </div>
+                        <span class="rating-value">{{ "%.1f"|format(book.rating) }}</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="book-actions">
+                        <a href="{{ url_for('view_book', book_id=book.id) }}" class="action-btn view-btn"
+                            title="View Details">
+                            <i class="bx bx-show"></i>
+                        </a>
+                        <a href="{{ url_for('edit_book', book_id=book.id) }}" class="action-btn edit-btn"
+                            title="Edit Book">
+                            <i class="bx bx-edit"></i>
+                        </a>
+                        <a href="{{ url_for('delete_book', book_id=book.id) }}" class="action-btn delete-btn"
+                            title="Delete Book" onclick="return confirm('Are you sure you want to delete this book?')">
+                            <i class="bx bx-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
             {% endfor %}
         </div>
-    {% else %}
-        <p class="no-books-message">You haven't added any books yet. <br> <a href="{{ url_for('add_book') }}">Add your first book!</a> </p>
+
+        <!-- No Results Message -->
+        <div id="noResults" class="no-results" style="display: none;">
+            <div class="no-results-icon">
+                <i class="bx bx-search"></i>
+            </div>
+            <h3>No books found</h3>
+            <p>Try adjusting your search terms or filters</p>
+        </div>
+
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-visual">
+                <div class="empty-icon">
+                    <i class="bx bx-book-bookmark"></i>
+                </div>
+                <div class="empty-books">
+                    <div class="empty-book"></div>
+                    <div class="empty-book"></div>
+                    <div class="empty-book"></div>
+                </div>
+            </div>
+            <div class="empty-state-content">
+                <h3>Your library is waiting</h3>
+                <p>Start building your personal reading collection by adding your first book</p>
+                <a href="{{ url_for('add_book') }}" class="btn btn-primary btn-lg">
+                    <i class="bx bx-plus"></i>
+                    Add Your First Book
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if books %}
+    <!-- Quick Stats Section -->
+    <div class="stats-section">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bx bx-star"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">
+                        {% set rated_books = books|selectattr('rating')|selectattr('rating', '>', 0)|list %}
+                        {% if rated_books %}
+                        {{ "%.1f"|format(rated_books|sum(attribute='rating') / rated_books|length) }}
+                        {% else %}
+                        ---
+                        {% endif %}
+                    </div>
+                    <div class="stat-label">Avg Rating</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bx bx-book"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ books|length }}</div>
+                    <div class="stat-label">Total Books</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="bx bx-time"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">
+                        {% set finished_books = books|selectattr('reading_finished')|list %}
+                        {{ finished_books|length }}
+                    </div>
+                    <div class="stat-label">Completed</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
     {% endif %}
 </div>
 {% endblock %}

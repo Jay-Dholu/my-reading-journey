@@ -2,6 +2,7 @@ from wtforms import StringField, PasswordField, TextAreaField, FileField, Decima
 from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange, Optional
 from flask_wtf.file import FileAllowed, FileRequired
 from flask_wtf import FlaskForm
+from decimal import Decimal
 
 
 class SignUp(FlaskForm):
@@ -24,7 +25,7 @@ class Login(FlaskForm):
         if not super().validate():
             return False
 
-        # Custom logic: ensure at least one of email or userid is filled
+        # My custom logic to ensure at least one of email or userid is filled, else this will not let user proceed
         if not self.email.data and not self.userid.data:
             raise ValidationError("Either Email or User ID must be filled.")
 
@@ -34,8 +35,9 @@ class Login(FlaskForm):
 class Book(FlaskForm):
     title = StringField(label='Title', validators=[DataRequired()])
     author = StringField(label='Author')
+    isbn = StringField(label='ISBN', validators=[Optional(), Length(min=10, max=20, message="An ISBN must be 10 to 20 characters long.")])
     genre = StringField(label='Genre')
-    rating = DecimalField(label='Rating', places=1, validators=[NumberRange(min=0, max=5)], default=0)
+    rating = DecimalField(label='Rating', places=1, validators=[NumberRange(min=0, max=5)], default=Decimal(0))
     description = TextAreaField(label='Description')
     cover_image = FileField(label='Upload Book Cover', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     reading_started = DateField(label='Date Started', validators=[Optional()])

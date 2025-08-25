@@ -1,64 +1,87 @@
 {% extends "base.html" %}
 
 {% block css %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/book_details.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book_details.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="book-details-wrapper">
-    <!-- Cover Image at the top -->
-    <div class="cover-container">
-        {% if book.cover_image %}
-            <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}" alt="{{ book.title }} Cover">
-        {% else %}
-            <img src="{{ url_for('static', filename='uploads/default.jpg') }}" alt="Default Book Cover">
-        {% endif %}
+<div class="details-page-container">
+    <div class="details-hero">
+        <div class="details-hero-content">
+            <h1 class="details-hero-title">{{ book.title }}</h1>
+            <p class="details-hero-subtitle">by <span>{{ book.author or 'Unknown Author' }}</span></p>
+			<p class="details-hero-isbn"><strong>ISBN:</strong> {{ book.isbn or 'Not specified' }}</p>
+        </div>
+        <div class="details-hero-visual">
+            {% if book.cover_image %}
+            <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}" alt="{{ book.title }} Cover"
+                class="hero-cover-img">
+            {% else %}
+            <div class="book-icon">
+                <i class="bx bx-book-heart"></i>
+            </div>
+            {% endif %}
+        </div>
     </div>
 
-    <!-- 3-column grid below -->
-    <div class="details-grid">
-        <!-- Column 1: Dates -->
-        <div class="column">
-            <p><strong>Reading Started</strong><br> {% if book.reading_started %} {{ book.reading_started.strftime("%b  %d  %Y") }} {% else %} --- {% endif %}</p>
-            <p><strong>Reading Finished</strong><br> {% if book.reading_finished %} {{ book.reading_finished.strftime("%b  %d  %Y") }} {% else %} --- {% endif %}</p>
-        </div>
-
-        <!-- Column 2: Title/Author/Rating/Actions -->
-        <div class="column">
-            <p class="book-title"><strong>Title</strong><br> {% if book.title %} {{ book.title }} {% else %} --- {% endif %}</p>
-            <p><strong>Author</strong><br> {% if book.author %} {{ book.author }} {% else %} --- {% endif %}</p>
-            <p><strong>Rating</strong><br> {% if book.rating %}
-                <span class="star-rating">
-                    {% set full_stars = book.rating|int %}
-                    {% set has_half = 0.5 <= (book.rating - full_stars) < 1 %}
-                    {% set empty_stars = 5 - full_stars - (1 if has_half else 0) %}
-
-                    {% for _ in range(full_stars) %}
-                        <span class="star full">&#9733;</span>
-                    {% endfor %}
-
-                    {% if has_half %}
-                        <span class="star half">&#9733;</span>
-                    {% endif %}
-
-                    {% for _ in range(empty_stars) %}
-                        <span class="star">&#9734;</span>
-                    {% endfor %}
-                    <span class="numeric-rating">({{ "%.1f"|format(book.rating) }}/5)</span>
-                </span>
-                {% else %} --- {% endif %}
-            </p>
-            
-            <div class="action-buttons">
-                <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn edit">Edit</a>
-                <a href="{{ url_for('delete_book', book_id=book.id) }}" class="btn delete">Delete</a>
+    <div class="modern-details-container">
+        <div class="details-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="bx bx-calendar"></i>
+                    Your Journey
+                </h3>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Date Started</span>
+                    <span class="detail-value">{{ book.reading_started.strftime('%B %d, %Y') if book.reading_started
+                        else 'Not specified' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Date Finished</span>
+                    <span class="detail-value">{{ book.reading_finished.strftime('%B %d, %Y') if book.reading_finished
+                        else 'Not finished' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Your Rating</span>
+                    <span class="detail-value star-rating">
+                        {% if book.rating and book.rating > 0 %}
+                        {% set full_stars = book.rating|int %}
+                        {% set has_half = 0.5 <= (book.rating - full_stars) < 1 %} {% for _ in range(full_stars) %}<i
+                            class="bx bxs-star"></i>{% endfor %}
+                            {% if has_half %}<i class="bx bxs-star-half"></i>{% endif %}
+                            <span class="rating-number">({{ "%.1f"|format(book.rating) }})</span>
+                            {% else %}
+                            Not Rated
+                            {% endif %}
+                    </span>
+                </div>
             </div>
         </div>
-
-        <!-- Column 3: Genre/Description -->
-        <div class="column">
-            <p><strong>Genre</strong><br> {% if book.genre %} {{ book.genre }} {% else %} --- {% endif %}</p>
-            <p><strong>Description</strong><br>{% if book.description %} {{ book.description }} {% else %} --- {% endif %}</p>
+        <div class="details-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="bx bx-edit"></i>
+                    Details & Review
+                </h3>
+            </div>
+            <div class="details-prose">
+				<h3 class="details-prose-genre"><strong>Genre:</strong></h3>
+                <p>{{ book.genre or 'Not specified' }}</p>
+				<h3 class="details-prose-description"><strong>Description:</strong></h3>
+                <p>{{ book.description or 'No description provided.' }}</p>
+            </div>
+        </div>
+        <div class="details-actions">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary btn-lg">
+                <i class="bx bx-arrow-back"></i>
+                Back to Library
+            </a>
+            <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn btn-primary btn-lg">
+                <i class="bx bx-edit"></i>
+                Edit Book
+            </a>
         </div>
     </div>
 </div>

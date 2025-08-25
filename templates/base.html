@@ -1,123 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>{{ title }}</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Lora:400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/book-icon-circular.png') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/forms.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
-  <script src="https://cdn.tailwindcss.com"></script>
-  {% block css %} {% endblock css %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    
+    <!-- Modern Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap (for modals and utilities) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/book-icon-circular.png') }}">
+    
+    <!-- Base Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    
+    {% block css %}{% endblock css %}
 </head>
 <body>
-  <div class="page-container">
-    <nav class="navbar">
-      <div class="navbar-content">
-        <div class="branding">
-          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="My Reading Journey" class="logo">
-          <a href="#" class="brand">My Reading Journey</a>
-        </div>
-        <!-- Mobile Controls -->
-        <div class="mobile-controls">
-          <button id="theme-toggle-mobile" class="theme-toggle">
-            <i class="fas fa-moon"></i>
-          </button>
-          <button id="menu-btn" class="menu-btn">☰</button>
-        </div>
+    <div class="page-container">
+        <!-- Modern Navbar -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <!-- Logo Section -->
+                <div class="nav-brand">
+                    <div class="logo-container">
+                        <div class="logo-icon">
+                            <i class="bx bx-book-open"></i>
+                        </div>
+                        <div class="brand-text">
+                            <span class="brand-name">My Reading</span>
+                            <span class="brand-subtitle">Journey</span>
+                        </div>
+                    </div>
+                </div>
 
-        <!-- This group stays aligned horizontally -->
-        <div class="navbar-right">
-          <button id="theme-toggle" class="theme-toggle desktop-only">
-            <i class="fas fa-moon"></i>
-          </button>
+                <!-- Desktop Navigation -->
+                <div class="nav-menu desktop-nav">
+                    {% if session.get('user_id') %}
+                        <a href="/home" class="nav-link">
+                            <i class="bx bx-home"></i>
+                            <span>Home</span>
+                        </a>
+                        <a href="/add_book" class="nav-link">
+                            <i class="bx bx-plus"></i>
+                            <span>Add Book</span>
+                        </a>
+                        <div class="nav-dropdown">
+                            <a href="#" class="nav-link dropdown-trigger" data-bs-toggle="dropdown">
+                                <i class="bx bx-data"></i>
+                                <span>Data</span>
+                                <i class="bx bx-chevron-down"></i>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a href="#" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                                    <i class="bx bx-upload"></i>
+                                    Upload Books Data
+                                </a>
+                                <a href="{{ url_for('download_books') }}" class="dropdown-item">
+                                    <i class="bx bx-download"></i>
+                                    Download Books Data
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="/home" class="nav-link">
+                            <i class="bx bx-home"></i>
+                            <span>Home</span>
+                        </a>
+                        <a href="/sign_up" class="nav-link">
+                            <i class="bx bx-user-plus"></i>
+                            <span>Sign Up</span>
+                        </a>
+                        <a href="/login" class="nav-link">
+                            <i class="bx bx-log-in"></i>
+                            <span>Login</span>
+                        </a>
+                    {% endif %}
+                    <a href="/about" class="nav-link">
+                        <i class="bx bx-info-circle"></i>
+                        <span>About</span>
+                    </a>
+                </div>
 
-          <div id="nav-links" class="nav-links">
-            {% if session.get('user_id') %}
-              <a href="/logout">Logout</a>
-              <a href="/home">Home</a>
-              <a href="/add_book">Add Book</a>
-              <div class="dropdown">
-                <a class="dropdown-toggle" href="#" id="dataDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Data
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="dataDropdown">
-                  <li><a class="dropdown-item" href="{{ url_for('download_books') }}">Download</a></li>
-                  <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#uploadModal">Upload</a></li>
-                </ul>
-              </div>
-            {% else %}
-              <a href="/home">Home</a>
-              <a href="/sign_up">Signup</a>
-              <a href="/login">Login</a>
-            {% endif %}
-            <a href="/about">About</a>
-            <a href="#contact">Contacts</a>
-          </div>
-        </div>
-      </div>
-    </nav>
+                <!-- Theme Toggle & Mobile Menu -->
+                <div class="nav-controls">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fa fa-moon"></i>
+                    </button>
+                    
+                    {% if session.get('user_id') %}
+                        <div class="user-menu">
+                            <button class="user-avatar">
+                                <i class="bx bx-user"></i>
+                            </button>
+                            <div class="user-dropdown">
+                                <a href="/logout" class="dropdown-item">
+                                    <i class="bx bx-log-out"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
 
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <div id="flash-container">
-          {% for category, message in messages %}
-            <div class="flash-message {{ category }}">
-              <p>{{ message }}</p>
+                    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
             </div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
 
-    <main class="main-content">
-      {% block content %}{% endblock %}
-    </main>
-  </div>
+            <!-- Mobile Navigation -->
+            <div class="mobile-nav" id="mobile-nav">
+                {% if session.get('user_id') %}
+                    <a href="/home" class="mobile-nav-link">
+                        <i class="bx bx-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/add_book" class="mobile-nav-link">
+                        <i class="bx bx-plus"></i>
+                        <span>Add Book</span>
+                    </a>
+                    <a href="#" class="mobile-nav-link" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                        <i class="bx bx-upload"></i>
+                        <span>Upload Books Data</span>
+                    </a>
+                    <a href="{{ url_for('download_books') }}" class="mobile-nav-link">
+                        <i class="bx bx-download"></i>
+                        <span>Download Books Data</span>
+                    </a>
+                    <a href="/logout" class="mobile-nav-link">
+                        <i class="bx bx-log-out"></i>
+                        <span>Logout</span>
+                    </a>
+                {% else %}
+                    <a href="/home" class="mobile-nav-link">
+                        <i class="bx bx-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="/sign_up" class="mobile-nav-link">
+                        <i class="bx bx-user-plus"></i>
+                        <span>Sign Up</span>
+                    </a>
+                    <a href="/login" class="mobile-nav-link">
+                        <i class="bx bx-log-in"></i>
+                        <span>Login</span>
+                    </a>
+                {% endif %}
+                <a href="/about" class="mobile-nav-link">
+                    <i class="bx bx-info-circle"></i>
+                    <span>About</span>
+                </a>
+            </div>
+        </nav>
 
-  <footer id="contact" class="footer">
-    <div class="footer-container">
-      <h2>Contact Me</h2>
-      <div class="social-links">
-      <a href="https://github.com/Jay-Dholu" target="_blank" aria-label="GitHub">
-        <i class="fab fa-github icon"></i>
-      </a>
-      <a href="https://linkedin.com/in/jay-dholu-433a582b1" target="_blank" aria-label="LinkedIn">
-        <i class="fab fa-linkedin icon"></i>
-      </a>
-      <a href="https://x.com/jay_dholu" target="_blank" aria-label="Twitter (X)">
-        <i class="fab fa-x-twitter icon"></i>
-      </a>
-      <a href="mailto:jaydholu074@gmail.com" aria-label="Email">
-        <i class="fas fa-envelope icon"></i>
-      </a>
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                <div class="flash-container">
+                    {% for category, message in messages %}
+                        <div class="flash-message flash-{{ category }}">
+                            <div class="flash-icon">
+                                {% if category == 'success' %}
+                                    <i class="bx bx-check-circle"></i>
+                                {% elif category == 'danger' %}
+                                    <i class="bx bx-error-circle"></i>
+                                {% elif category == 'warning' %}
+                                    <i class="bx bx-error"></i>
+                                {% else %}
+                                    <i class="bx bx-info-circle"></i>
+                                {% endif %}
+                            </div>
+                            <span class="flash-text">{{ message }}</span>
+                            <button class="flash-close" onclick="this.parentElement.remove()">
+                                <i class="bx bx-x"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Modern Footer -->
+        <footer class="footer" id="contact">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <div class="footer-brand">
+                            <div class="footer-logo">
+                                <i class="bx bx-book-open"></i>
+                            </div>
+                            <div class="footer-text">
+                                <h3>My Reading Journey</h3>
+                                <p>Track, rate, and organize your reading adventures</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Connect with me</h4>
+                        <div class="social-links">
+                            <a href="https://github.com/Jay-Dholu" target="_blank" class="social-link">
+                                <i class="fa-brands fa-github"></i>
+                            </a>
+                            <a href="https://linkedin.com/in/jay-dholu-433a582b1" target="_blank" class="social-link">
+                                <i class="fa-brands fa-linkedin"></i>
+                            </a>
+                            <a href="https://x.com/jay_dholu" target="_blank" class="social-link">
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+                            <a href="mailto:jaydholu074@gmail.com" class="social-link">
+                                <i class="fa fa-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Jay Dholu. Crafted with passion for readers.</p>
+                </div>
+            </div>
+        </footer>
     </div>
-      <p>© 2025 Jay Dholu. All rights reserved.</p>
-    </div>
-  </footer>
-  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  {% block script %} {% endblock %}
 
-  <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <form method="POST" action="{{ url_for('upload_books') }}" enctype="multipart/form-data" class="modal-content">
-        {{ json_form.hidden_tag() }}
-        <div class="modal-header">
-          <h5 class="modal-title" id="uploadModalLabel">Upload Your Book Data</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content modern-modal">
+                <div class="modal-header">
+                    <div class="modal-title-container">
+                        <i class="bx bx-upload"></i>
+                        <h5 class="modal-title" id="uploadModalLabel">Upload Your Books</h5>
+                    </div>
+                    <button type="button" class="modal-close" data-bs-dismiss="modal">
+                        <i class="bx bx-x"></i>
+                    </button>
+                </div>
+                <form method="POST" action="{{ url_for('upload_books') }}" enctype="multipart/form-data">
+                    {{ json_form.hidden_tag() }}
+                    <div class="modal-body">
+                        <div class="upload-area">
+                            <div class="upload-icon">
+                                <i class="bx bx-cloud-upload"></i>
+                            </div>
+                            <p class="upload-text">Choose your JSON file</p>
+                            {{ json_form.json_file(class="file-input") }}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        {{ json_form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          {{ json_form.json_file(class="form-control") }}
-        </div>
-
-        <div class="modal-footer">
-          {{ json_form.submit(class="btn btn-primary") }}
-        </div>
-      </form>
     </div>
-  </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block script %}{% endblock %}
 </body>
 </html>
