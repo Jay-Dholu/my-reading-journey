@@ -35,7 +35,7 @@ with app.app_context():
 @app.before_request
 def check_user_session():
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         if not user:
             session.clear()
             flash("Your session was invalid and has been cleared. Please log in again.", "warning")
