@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
 from flask import Flask, session, flash, redirect, render_template, url_for, make_response
 from flask_wtf.csrf import CSRFProtect
@@ -14,9 +15,11 @@ from forms import Book, Login, SignUp, Data
 from models import Record, User, db
 
 
+load_dotenv()
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "SmF5IGlzIGtpbmcgb2YgdGhlIHVuaXZlcnNlLiBIZSBpcyB1bmRlZmVhdGFibGUsIGV2ZW4gYnkgQWxpZW5zLg=="
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///myreadingjourney.db"
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY", None)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///myreadingjourney.db")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=2)
 app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
