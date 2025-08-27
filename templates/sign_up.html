@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-wrapper">
+        <!-- Left Side - Visual -->
+        <div class="auth-visual">
+            <div class="visual-content">
+                <div class="book-stack">
+                    <div class="book book-1"></div>
+                    <div class="book book-2"></div>
+                    <div class="book book-3"></div>
+                    <div class="book book-4"></div>
+                </div>
+                <div class="visual-text">
+                    <h2>Start Your Journey</h2>
+                    <p>Join thousands of readers who track their reading progress and discover new favorites.</p>
+                </div>
+                <div class="floating-elements">
+                    <div class="element element-1">📚</div>
+                    <div class="element element-2">⭐</div>
+                    <div class="element element-3">📖</div>
+                    <div class="element element-4">✨</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side - Form -->
+        <div class="auth-form-container">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="bx bx-book-bookmark"></i>
+                </div>
+                <h1>Create Account</h1>
+                <p>Start tracking your reading journey today</p>
+            </div>
+
+            <!-- Signup Form -->
+            <form method="POST" action="{{ url_for('sign_up') }}" class="auth-form">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-group">
+                    <div class="input-container">
+                        <i class="bx bx-user input-icon"></i>
+                        {{ form.name(class="form-input", autocomplete="name") }}
+                        <label class="form-label">Full Name</label>
+                    </div>
+                    {% if form.name.errors %}
+                        <div class="error-message">
+                            {% for error in form.name.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="bx bx-id-card input-icon"></i>
+                            {{ form.userid(class="form-input", autocomplete="username") }}
+                            <label class="form-label">User ID</label>
+                        </div>
+                        {% if form.userid.errors %}
+                            <div class="error-message">
+                                {% for error in form.userid.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="bx bx-envelope input-icon"></i>
+                            {{ form.email(class="form-input", autocomplete="email") }}
+                            <label class="form-label">Email Address</label>
+                        </div>
+                        {% if form.email.errors %}
+                            <div class="error-message">
+                                {% for error in form.email.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="bx bx-lock input-icon"></i>
+                            {{ form.password(class="form-input", autocomplete="new-password") }}
+                            <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                                <i class="bx bx-show"></i>
+                            </button>
+                            <label class="form-label">Password</label>
+                        </div>
+                        <div class="password-strength">
+                            <div class="strength-bar">
+                                <div class="strength-fill"></div>
+                            </div>
+                            <span class="strength-text">Password strength</span>
+                        </div>
+                        {% if form.password.errors %}
+                            <div class="error-message">
+                                {% for error in form.password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <i class="bx bx-lock input-icon"></i>
+                            {{ form.confirm_password(class="form-input", autocomplete="new-password") }}
+                            <button type="button" class="password-toggle" onclick="togglePassword(this)">
+                                <i class="bx bx-show"></i>
+                            </button>
+                            <label class="form-label">Confirm</label>
+                        </div>
+                        {% if form.confirm_password.errors %}
+                            <div class="error-message">
+                                {% for error in form.confirm_password.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-container">
+                        <input type="checkbox" name="terms" required>
+                        <span class="checkmark"></span>
+                        I agree to the <a href="#" class="terms-link">Terms of Service</a> and <a href="#" class="terms-link">Privacy Policy</a>
+                    </label>
+                </div>
+
+                {{ form.submit(class="btn btn-primary btn-full") }}
+            </form>
+
+            <!-- Footer -->
+            <div class="auth-footer">
+                <p>Already have an account? 
+                   <a href="{{ url_for('login') }}" class="auth-link">Log in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/sign_up.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+{% endblock %}

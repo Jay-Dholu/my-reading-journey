@@ -1,0 +1,38 @@
+# Python virtual environment
+# Replace 'venv' with the name of your virtual environment folder if it's different
+venv/
+.venv/
+env/
+.env/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Flask instance folder (often contains secrets and database)
+instance/
+
+# Database file
+# It's good practice to not commit your local database
+myreadingjourney.db
+
+# User-uploaded files
+# This prevents book cover images from being added to the repo
+static/uploads/
+
+# Environment variables file (contains secrets like your email password)
+.env
+*.env
+
+# IDE and editor configuration files
+.vscode/
+.idea/
+
+# OS-generated files
+# Mac
+.DS_Store
+# Windows
+Thumbs.db
+ehthumbs.db

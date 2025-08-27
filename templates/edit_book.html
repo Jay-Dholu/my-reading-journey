@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_edit_book.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+    <div class="form-hero">
+        <div class="form-hero-content">
+            <h1 class="form-hero-title">Edit "{{ book.title }}"</h1>
+            <p class="form-hero-subtitle">Refine the details and update your reading progress for this book.</p>
+        </div>
+        <div class="form-hero-visual">
+            <div class="book-icon">
+                <i class="bx bx-edit-alt"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="modern-form-container">
+        <form method="POST" enctype="multipart/form-data" class="modern-form">
+            {{ form.hidden_tag() }}
+            {{ json_form.hidden_tag() }}
+
+            <div class="form-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="bx bx-info-circle"></i>
+                        Basic Information
+                    </h3>
+                </div>
+                <div class="form-grid">
+                    <div class="form-field col-span-2">
+                        <div class="input-group">
+                            <i class="bx bx-book input-icon"></i>
+                            {{ form.title(class="form-control", required=true) }}
+                            <label class="floating-label">Book Title *</label>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="input-group">
+                            <i class="bx bx-user input-icon"></i>
+                            {{ form.author(class="form-control", required=true) }}
+                            <label class="floating-label">Author *</label>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="input-group">
+                            <i class="bx bx-category input-icon"></i>
+                            {{ form.genre(class="form-control") }}
+                            <label class="floating-label">Genre</label>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="input-group">
+                            <i class="bx bx-barcode input-icon"></i>
+                            {{ form.isbn(class="form-control") }}
+                            <label class="floating-label">ISBN</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="bx bx-calendar"></i>
+                        Reading Details
+                    </h3>
+                </div>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <div class="input-group">
+                            <i class="bx bx-calendar-check input-icon"></i>
+                            {{ form.reading_started(class="form-control", required=true) }}
+                            <label class="floating-label">Date Started *</label>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <div class="input-group">
+                            <i class="bx bx-calendar-x input-icon"></i>
+                            {{ form.reading_finished(class="form-control") }}
+                            <label class="floating-label">Date Finished</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="bx bx-edit"></i>
+                        Additional Details
+                    </h3>
+                </div>
+                <div class="form-grid">
+                    <div class="form-field col-span-2">
+                        <div class="rating-container">
+                            <label class="rating-label">
+                                <i class="bx bx-star"></i>
+                                Your Rating
+                            </label>
+
+                            <input type="hidden" id="ratingValueInput" name="rating"
+                                value="{{ form.rating.data or 0.0 }}">
+
+                            <div class="star-rating-input">
+                                <label class="star">
+                                    <i class="bx bx-star"></i>
+                                    <i class="bx bxs-star"></i>
+                                </label>
+                                <label class="star">
+                                    <i class="bx bx-star"></i>
+                                    <i class="bx bxs-star"></i>
+                                </label>
+                                <label class="star">
+                                    <i class="bx bx-star"></i>
+                                    <i class="bx bxs-star"></i>
+                                </label>
+                                <label class="star">
+                                    <i class="bx bx-star"></i>
+                                    <i class="bx bxs-star"></i>
+                                </label>
+                                <label class="star">
+                                    <i class="bx bx-star"></i>
+                                    <i class="bx bxs-star"></i>
+                                </label>
+                            </div>
+
+                            <div class="rating-display">
+                                <span class="rating-text">No rating</span>
+                                <div class="rating-value-container">
+                                    <span class="rating-value">0.0</span>
+                                    <input type="number" class="rating-value-edit" step="0.1" min="0" max="5"
+                                        style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-field col-span-2">
+                        <div class="input-group textarea-group">
+                            <i class="bx bx-message-detail input-icon"></i>
+                            {{ form.description(class="form-control form-textarea", rows="4") }}
+                            <label class="floating-label">Description & Review</label>
+                        </div>
+                    </div>
+                    <div class="form-field col-span-2">
+                        <div class="file-upload-area">
+                            <div class="upload-zone" id="uploadZone">
+                                <div class="upload-content">
+                                    <div class="upload-icon">
+                                        <i class="bx bx-cloud-upload"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <h4>Upload Book Cover</h4>
+                                        <p>Drag and drop an image here, or click to browse</p>
+                                        <span class="file-types">PNG, JPG, JPEG up to 10MB</span>
+                                    </div>
+                                </div>
+                                {{ form.cover_image(class="file-input", accept="image/*") }}
+                            </div>
+                            <div class="image-preview" id="imagePreview" style="display: none;">
+                                <img id="previewImg" src="" alt="Cover preview">
+                                <button type="button" class="remove-image" onclick="removeImage()">
+                                    <i class="bx bx-x"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ url_for('home') }}" class="btn btn-secondary btn-lg">
+                    <i class="bx bx-arrow-back"></i>
+                    Cancel
+                </a>
+                {{ form.submit(class="btn btn-primary btn-lg", value="Save Changes") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/books.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,73 @@
+.about-page, .developer-page {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.about-page h1, .developer-page h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--accent-hover);
+}
+
+.about-page h2, .developer-page h2 {
+    padding-top: 2rem;
+    text-align: center;
+    color: var(--accent-primary)
+}
+
+.about-page h3, .developer-page h3 {
+    color: var(--accent-primary);
+}
+
+.about-page ul, .about-page ul {
+    margin-top: 1rem;
+    padding-left: 1.2rem;
+}
+
+.about-page li, .developer-page li {
+    line-height: 1.6;
+}
+
+.about-page p, .developer-page p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.predictor {
+    text-decoration: underline;
+}
+
+.web-app-name {
+    color: var(--accent-primary);
+}
+
+.footer-section h4 {
+  font-size: 1.15rem;
+  margin-bottom: 1.1rem;
+  color: var(--accent-primary);
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-link {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.social-link:hover {
+  background: var(--accent-primary);
+  color: white;
+  transform: translateY(-2px);
+}

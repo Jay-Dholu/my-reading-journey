@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/book_details.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="details-page-container">
+    <div class="details-hero">
+        <div class="details-hero-content">
+            <h1 class="details-hero-title">{{ book.title }}</h1>
+            <p class="details-hero-subtitle">by <span>{{ book.author or 'Unknown Author' }}</span></p>
+			<p class="details-hero-isbn"><strong>ISBN:</strong> {{ book.isbn or 'Not specified' }}</p>
+        </div>
+        <div class="details-hero-visual">
+            {% if book.cover_image %}
+            <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}" alt="{{ book.title }} Cover"
+                class="hero-cover-img">
+            {% else %}
+            <div class="book-icon">
+                <i class="bx bx-book-heart"></i>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="modern-details-container">
+        <div class="details-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="bx bx-calendar"></i>
+                    Your Journey
+                </h3>
+            </div>
+            <div class="details-grid">
+                <div class="detail-item">
+                    <span class="detail-label">Date Started</span>
+                    <span class="detail-value">{{ book.reading_started.strftime('%B %d, %Y') if book.reading_started
+                        else 'Not specified' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Date Finished</span>
+                    <span class="detail-value">{{ book.reading_finished.strftime('%B %d, %Y') if book.reading_finished
+                        else 'Not finished' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Your Rating</span>
+                    <span class="detail-value star-rating">
+                        {% if book.rating and book.rating > 0 %}
+                        {% set full_stars = book.rating|int %}
+                        {% set has_half = 0.5 <= (book.rating - full_stars) < 1 %} {% for _ in range(full_stars) %}<i
+                            class="bx bxs-star"></i>{% endfor %}
+                            {% if has_half %}<i class="bx bxs-star-half"></i>{% endif %}
+                            <span class="rating-number">({{ "%.1f"|format(book.rating) }})</span>
+                            {% else %}
+                            Not Rated
+                            {% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="details-section">
+            <div class="section-header">
+                <h3 class="section-title">
+                    <i class="bx bx-edit"></i>
+                    Details & Review
+                </h3>
+            </div>
+            <div class="details-prose">
+				<h3 class="details-prose-genre"><strong>Genre:</strong></h3>
+                <p>{{ book.genre or 'Not specified' }}</p>
+				<h3 class="details-prose-description"><strong>Description:</strong></h3>
+                <p>{{ book.description or 'No description provided.' }}</p>
+            </div>
+        </div>
+        <div class="details-actions">
+            <a href="{{ url_for('home') }}" class="btn btn-secondary btn-lg">
+                <i class="bx bx-arrow-back"></i>
+                Back to Library
+            </a>
+            <a href="{{ url_for('edit_book', book_id=book.id) }}" class="btn btn-primary btn-lg">
+                <i class="bx bx-edit"></i>
+                Edit Book
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

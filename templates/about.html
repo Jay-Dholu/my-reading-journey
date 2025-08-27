@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/about_developer.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="about-page">
+    <h1>About This Project</h1>
+
+    <section class="web-app-description">
+        <p>
+            <strong class="web-app-name">My Reading Journey</strong> is a personal book tracker web app that helps users
+            manage, rate, and
+            reflect on the books they’ve read. Whether you're a casual reader or an avid bookworm, this platform makes
+            it simple to organize your reading experience.
+        </p>
+        <br />
+
+        <h3>Features</h3>
+        <ul>
+            <li>User authentication with secure login and signup.</li>
+            <li>Add book entries with details like title, author, genre, description, start/finish dates, and a cover
+                image.</li>
+            <li>Edit or delete books details anytime.</li>
+            <li>Rate books out of 5 stars and add detailed descriptions to it.</li>
+            <li>Track when you started and finished reading</li>
+            <li>Organize books by title, genre, and author</li>
+            <li>View your collection as book cards on the homepage and click for full details.</li>
+            <li>Supports light/dark themes for better experience.</li>
+        </ul>
+        <br />
+
+        <h3>How It Works</h3>
+        <ol>
+            <li>Sign up or log in to your account.</li>
+            <li>Add a book (only the title is required at first, rest can be filled in later).</li>
+            <li>Your books are displayed on the homepage as cards.</li>
+            <li>Click action buttons at bottom card to view details, edit, or delete it.</li>
+        </ol>
+        <br />
+
+        <h3>Building Technologies</h3>
+        <p>This project is built using:</p>
+        <ul>
+            <li><strong>Backend:</strong> Flask, SQLAlchemy, WTForms, Werkzeug</li>
+            <li><strong>Frontend:</strong> HTML5, CSS, JavaScript, Jinja Templates</li>
+            <li><strong>Database:</strong> SQLite (default, lightweight and easy to set up, also free)</li>
+        </ul>
+        <p>
+            The app follows a simple <strong>CRUD system</strong> (Create, Read, Update, Delete) for managing books.
+        </p>
+        <br />
+    </section>
+
+    <hr class="my-4">
+
+    <section class="org-description">
+        <h2>Code And Cosmos</h2>
+        <p>
+            This web app is developed by <strong>Code And Cosmos</strong> as service based product.
+            For more details visit our official website <a href="https://codeandcosmos.onrender.com"
+                target="_blank">codeandcosmos</a>.
+        </p>
+        <p>
+            Code And Cosmos is a service based organization, dedicated to exploring the intersection of technology and
+            creativity. We believe in the power of code to shape our world and are committed to building tools that empower
+            individuals and communities.
+        </p>
+        <br/>
+
+        <h3>What We Build</h3>
+        <p>
+            We are architects of the digital universe. As a service-based product studio, we partner with businesses to design, develop, and deploy high-performance applications that solve real-world challenges and drive growth.
+        </p>
+        <p>Our expertise spans the full spectrum of modern application development:</p>
+        <ul>
+            <li><strong>Bespoke Web Applications:</strong> From dynamic websites to complex enterprise platforms, we
+                build scalable and secure web solutions tailored to your unique business needs.</li>
+            <li><strong>Engaging Mobile Apps:</strong> We create intuitive and powerful mobile applications for both iOS
+                and Android, connecting you directly with your users wherever they are.</li>
+            <li><strong>Intelligent ML Solutions:</strong> We leverage the power of data with custom machine learning
+                models and AI-driven features designed to unlock insights and automate processes.</li>
+        </ul>
+        <br/>
+
+        <h3>Our Approach</h3>
+        <p>
+            We believe that the best products are born from collaboration. We work closely with our clients as a
+            dedicated technology partner, ensuring transparency, agility, and a relentless focus on quality from the
+            first line of code to the final launch.
+        </p>
+
+        <p>
+            Ready to bring your vision to life? Let's explore the possibilities together.
+            <br>
+            <strong>Visit our official website to learn more: </strong><a href="https://codeandcosmos.onrender.com" target="_blank">codeandcosmos</a>
+        </p>
+    </section>
+</div>
+{% endblock %}
