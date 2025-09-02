@@ -167,10 +167,16 @@
     padding: 2.5rem;
     background: var(--bg-secondary);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
 }
+
+.details-actions .btn-lg {
+    flex: 1;
+    max-width: 350px;
+}
+
 
 @media (max-width: 768px) {
     .details-hero {
@@ -183,5 +189,15 @@
     }
     .details-grid {
         grid-template-columns: 1fr;
+    }
+
+    .details-actions {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+
+    .details-actions .btn-lg {
+        width: 100%;
+        max-width: 100%;
     }
 }

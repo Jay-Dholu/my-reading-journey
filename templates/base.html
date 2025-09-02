@@ -108,6 +108,10 @@
 
                 <!-- Theme Toggle & Mobile Menu -->
                 <div class="nav-controls">
+                    <button class="theme-toggle" id="theme-toggle">
+                        <i class="fa fa-moon"></i>
+                    </button>
+                    
                     {% if session.get('user_id') and current_user %}
                     <div class="user-menu">
                         <div class="user-info">
@@ -133,10 +137,6 @@
                         </div>
                     </div>
                     {% endif %}
-
-                    <button class="theme-toggle" id="theme-toggle">
-                        <i class="fa fa-moon"></i>
-                    </button>
 
                     <button class="mobile-menu-toggle" id="mobile-menu-toggle">
                         <span></span>
@@ -191,7 +191,11 @@
                 {% endif %}
                 <a href="/about" class="mobile-nav-link">
                     <i class="bx bx-info-circle"></i>
-                    <span>About</span>
+                    <span>About Web App</span>
+                </a>
+                <a href="/developer" class="dropdown-item">
+                    <i class="bx bx-code-alt"></i>
+                    About Developer
                 </a>
             </div>
         </nav>

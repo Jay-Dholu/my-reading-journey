@@ -176,17 +176,6 @@
     box-shadow: 0 0 0 3px rgba(235, 157, 68, 0.1);
 }
 
-.form-control.date-input {
-    color: var(--text-muted);
-}
-
-.form-control.date-input::-webkit-datetime-edit-text,
-.form-control.date-input::-webkit-datetime-edit-month-field,
-.form-control.date-input::-webkit-datetime-edit-day-field,
-.form-control.date-input::-webkit-datetime-edit-year-field {
-    color: var(--text-muted);
-}
-
 .input-group.focused .input-icon,
 .input-group.has-value .input-icon {
     color: var(--primary-600);
@@ -196,6 +185,41 @@
     min-height: 120px;
     resize: vertical;
     padding-top: 1rem;
+}
+
+
+.date-input {
+    position: relative;
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.date-input::after {
+    font-family: 'Boxicons';
+    content: '\edc2';
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    transition: color var(--transition-fast);
+}
+
+.input-group.focused .date-input::after,
+.input-group.has-value .date-input::after {
+    color: var(--primary-600);
 }
 
 

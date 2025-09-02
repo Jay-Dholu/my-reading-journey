@@ -43,12 +43,10 @@ function initializeFileUpload() {
     const previewImg = document.getElementById('previewImg');
     const removeImageBtn = document.querySelector('.remove-image');
 
-    // Click to upload
     if(uploadZone) {
       uploadZone.addEventListener('click', () => fileInput.click());
     }
 
-    // Drag and drop
     if(uploadZone) {
       uploadZone.addEventListener('dragover', function(e) {
           e.preventDefault();
@@ -72,7 +70,6 @@ function initializeFileUpload() {
       });
     }
 
-    // File input change
     if(fileInput) {
       fileInput.addEventListener('change', function(e) {
           if (e.target.files.length > 0) {
@@ -81,7 +78,6 @@ function initializeFileUpload() {
       });
     }
 
-    // Remove image button
     if(removeImageBtn) {
       removeImageBtn.addEventListener('click', removeImage);
     }
@@ -125,9 +121,6 @@ function initializeStarRating() {
         5: 'Excellent'
     };
 
-    // --- Event Listeners ---
-
-    // Handle star clicks
     stars.forEach((star, index) => {
         star.addEventListener('click', () => {
             const newRating = index + 1;
@@ -135,7 +128,6 @@ function initializeStarRating() {
         });
     });
 
-    // Handle clicking the number to edit it
     ratingValueDisplay.addEventListener('click', () => {
         ratingValueDisplay.style.display = 'none';
         ratingValueEdit.style.display = 'inline-block';
@@ -143,21 +135,17 @@ function initializeStarRating() {
         ratingValueEdit.focus();
     });
 
-    // Handle saving the edited number
-    ratingValueEdit.addEventListener('blur', () => { // When clicking away
+    ratingValueEdit.addEventListener('blur', () => {
         saveAndCloseEdit();
     });
-    ratingValueEdit.addEventListener('keydown', (e) => { // When pressing Enter
+    ratingValueEdit.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             saveAndCloseEdit();
         }
     });
 
-    // --- Helper Functions ---
-
     function saveAndCloseEdit() {
         let newRating = parseFloat(ratingValueEdit.value);
-        // Validate and clamp the value between 0 and 5
         if (isNaN(newRating)) newRating = 0;
         if (newRating < 0) newRating = 0;
         if (newRating > 5) newRating = 5;
@@ -174,13 +162,9 @@ function initializeStarRating() {
     }
     
     function updateRatingDisplay(rating) {
-        // Update the number "0.0"
         ratingValueDisplay.textContent = rating.toFixed(1);
-        
-        // Update the text "Good", "Excellent", etc.
         ratingText.textContent = ratingTexts[Math.round(rating)] || ratingTexts[0];
 
-        // Update the stars to show partial fills
         stars.forEach((star, index) => {
             const starFill = star.querySelector('.bxs-star');
             const turn = index + 1;
@@ -196,7 +180,6 @@ function initializeStarRating() {
         });
     }
 
-    // Initialize the display on page load
     updateRating(parseFloat(hiddenInput.value));
 }
 
@@ -205,16 +188,15 @@ function initializeDateInputs() {
     const dateInputs = document.querySelectorAll('.date-input');
 
     dateInputs.forEach(input => {
-        // Hide the native date placeholder on page load
-        input.type = 'text';
+        if (!input.value) {
+            input.type = 'text';
+        }
 
         input.addEventListener('focus', () => {
-            // Switch to date type when user clicks in
             input.type = 'date';
         });
 
         input.addEventListener('blur', () => {
-            // If the input is empty, switch back to text
             if (!input.value) {
                 input.type = 'text';
             }

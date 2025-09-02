@@ -73,14 +73,14 @@
                     <div class="form-field">
                         <div class="input-group">
                             <i class="bx bx-calendar-check input-icon"></i>
-                            {{ form.reading_started(class="form-control", required=true) }}
+                            {{ form.reading_started(class="form-control date-input", type="date") }}
                             <label class="floating-label">Date Started *</label>
                         </div>
                     </div>
                     <div class="form-field">
                         <div class="input-group">
                             <i class="bx bx-calendar-x input-icon"></i>
-                            {{ form.reading_finished(class="form-control") }}
+                            {{ form.reading_finished(class="form-control date-input", type="date") }}
                             <label class="floating-label">Date Finished</label>
                         </div>
                     </div>
@@ -158,8 +158,10 @@
                                         <span class="file-types">PNG, JPG, JPEG up to 10MB</span>
                                     </div>
                                 </div>
-                                {{ form.cover_image(class="file-input", accept="image/*") }}
                             </div>
+
+                            {{ form.cover_image(class="file-input", accept="image/*", style="display:none;") }}
+                            
                             <div class="image-preview" id="imagePreview" style="display: none;">
                                 <img id="previewImg" src="" alt="Cover preview">
                                 <button type="button" class="remove-image" onclick="removeImage()">

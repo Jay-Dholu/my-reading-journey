@@ -271,7 +271,7 @@ def settings():
 
     json_form = Data()
 
-    return render_template('settings.html', title='Edit Profile | My Reading Journey', form=form, json_form=json_form)
+    return render_template('settings.html', title='Settings | My Reading Journey', form=form, json_form=json_form)
 
 
 @app.route("/delete_account", methods=['POST'])

@@ -1,81 +1,115 @@
 {% extends "base.html" %}
 
 {% block css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/settings.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-wrapper" style="grid-template-columns: 1fr;">
-        <div class="auth-form-container">
-            <div class="auth-header">
-                <div class="auth-logo">
-                    <i class='bx bx-user-circle'></i>
-                </div>
-                <h1 style="color: var(--accent-primary);">Edit Your Profile</h1>
-                <p>Update your information</p>
-            </div>
-            <form method="POST" action="{{ url_for('edit_profile') }}" class="auth-form">
-                {{ form.hidden_tag() }}
+<div class="container">
+    <div class="header">
+        <h1>Settings</h1>
+        <p>Manage your account, profile, and application preferences</p>
+    </div>
 
-                <div class="form-group">
-                    <div class="input-container">
-                        <i class="bx bx-user input-icon"></i>
-                        {{ form.name(class="form-input", placeholder=" ") }}
-                        <label class="form-label">Full Name</label>
+    <div class="settings-grid">
+        <div class="sidebar">
+            <nav class="settings-nav-menu">
+                <div class="nav-item active" data-section="profile">
+                    <i class='bx bx-user nav-icon'></i>
+                    Profile
+                </div>
+                <div class="nav-item" data-section="appearance">
+                    <i class='bx bx-palette nav-icon'></i>
+                    Appearance
+                </div>
+                <div class="nav-item" data-section="account">
+                    <i class='bx bx-shield-quarter nav-icon'></i>
+                    Account
+                </div>
+                <div class="nav-item" data-section="advanced">
+                    <i class='bx bx-data nav-icon'></i>
+                    Data
+                </div>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <!-- Profile Section -->
+            <div class="section active" id="profile">
+                <div class="section-title">
+                    <i class='bx bx-user-circle section-icon'></i>
+                    <span>
+                        <h2>Profile Settings</h2>
+                    </span>
+                </div>
+
+                <div class="profile-section">
+                    <div class="avatar">{{ current_user.name[0] }}</div>
+                    <div class="profile-info">
+                        <h2>{{ current_user.name }}</h2>
+                        <p>{{ current_user.email }}</p>
                     </div>
                 </div>
 
-                <div class="form-row">
+                <form method="POST" action="{{ url_for('settings') }}" class="setting-group">
+                    {{ form.hidden_tag() }}
                     <div class="form-group">
-                        <div class="input-container">
-                            <i class="bx bx-id-card input-icon"></i>
-                            {{ form.userid(class="form-input", placeholder=" ") }}
+                        <label class="form-label">Name</label>
+                        {{ form.name(class="form-input") }}
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
                             <label class="form-label">User ID</label>
+                            {{ form.userid(class="form-input") }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            {{ form.email(class="form-input") }}
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="input-container">
-                            <i class="bx bx-envelope input-icon"></i>
-                            {{ form.email(class="form-input", placeholder=" ") }}
-                            <label class="form-label">Email Address</label>
+
+                    <h3 class="subsection-title">Change Password</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            {{ form.password(class="form-input", placeholder="Leave blank to keep current") }}
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            {{ form.confirm_password(class="form-input") }}
                         </div>
                     </div>
-                </div>
+                    {{ form.submit(class="btn btn-primary", value="Save Changes") }}
+                </form>
+            </div>
 
-                <div class="form-group">
-                    <p class="auth-footer"
-                        style="padding:0; border:none; margin-bottom:0.5rem; color: var(--accent-primary); font-style: italic;">
-                        Only fill if you want to really change your current password</p>
-                    <div class="input-container">
-                        <i class="bx bx-lock input-icon"></i>
-                        {{ form.password(class="form-input", autocomplete="new-password", placeholder=" ") }}
-                        <button type="button" class="password-toggle" onclick="togglePassword(this)">
-                            <i class="bx bx-show"></i>
+            <!-- Appearance Section -->
+            <div class="section" id="appearance">
+                <div class="section-title">
+                    <i class='bx bx-palette section-icon'></i>
+                    Appearance & Theme
+                </div>
+                <div class="setting-group">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Theme</h3>
+                            <p>Switch between light and dark themes</p>
+                        </div>
+                        <!-- This button is just a visual trigger. The actual theme logic is in script.js -->
+                        <button class="btn btn-secondary" id="theme-toggle-settings">
+                            <i class="fa fa-moon"></i>
+                            <span>Toggle Theme</span>
                         </button>
-                        <label class="form-label">New Password</label>
                     </div>
                 </div>
+            </div>
 
-                <div class="form-group">
-                    <div class="input-container">
-                        <i class="bx bx-lock input-icon"></i>
-                        {{ form.confirm_password(class="form-input", autocomplete="new-password", placeholder=" ") }}
-                        <button type="button" class="password-toggle" onclick="togglePassword(this)">
-                            <i class="bx bx-show"></i>
-                        </button>
-                        <label class="form-label">Confirm New Password</label>
-                    </div>
+            <!-- Account Section -->
+            <div class="section" id="account">
+                <div class="section-title">
+                    <i class='bx bx-shield-quarter section-icon'></i>
+                    Account Management
                 </div>
-
-                <div class="form-actions">
-                    <a href="{{ url_for('home') }}" class="btn btn-secondary">
-                        <i class="bx bx-arrow-back"></i>
-                        Cancel
-                    </a>
-                    {{ form.submit(class="btn btn-primary") }}
-                </div>
-
                 <div class="danger-zone">
                     <h3 class="danger-zone-title">Danger Zone</h3>
                     <p class="danger-zone-text">
@@ -87,34 +121,68 @@
                         Delete My Account
                     </button>
                 </div>
-            </form>
-            <div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content modern-modal">
-                        <div class="modal-header">
-                            <div class="modal-title-container">
-                                <i class="bx bx-error"></i>
-                                <h5 class="modal-title" id="deleteAccountModalLabel">Are you absolutely sure?</h5>
-                            </div>
-                            <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-x"></i>
-                            </button>
+            </div>
+
+            <!-- Advanced Section -->
+            <div class="section" id="advanced">
+                <div class="section-title">
+                    <i class='bx bx-data section-icon'></i>
+                    Data Management
+                </div>
+                <div class="setting-group">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Export Your Data</h3>
+                            <p>Download a JSON file of all your books.</p>
                         </div>
-                        <div class="modal-body">
-                            <p>This action cannot be undone. This will permanently delete your account and remove all of
-                                your book data.</p>
-                            <p>Please type your User ID **{{ current_user.userid }}** to confirm.</p>
-                            <form id="deleteAccountForm" method="POST" action="{{ url_for('delete_account') }}">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-                                <input type="text" id="confirmUserId" class="form-control" placeholder="Enter your User ID">
-                            </form>
+                        <a href="{{ url_for('download_books') }}" class="btn btn-secondary">
+                            <i class='bx bx-download'></i>
+                            Export
+                        </a>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Import Your Data</h3>
+                            <p>Upload a JSON file to add books to your library.</p>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" id="confirmDeleteBtn" class="btn btn-danger" disabled>I understand, delete my account</button>
-                        </div>
+                        <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                            <i class='bx bx-upload'></i>
+                            Import
+                        </button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal (from your original edit_profile page) -->
+<div class="modal fade" id="deleteAccountModal" tabindex="-1" aria-labelledby="deleteAccountModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <div class="modal-title-container">
+                    <i class="bx bx-error"></i>
+                    <h5 class="modal-title" id="deleteAccountModalLabel">Are you absolutely sure?</h5>
+                </div>
+                <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-x"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This action cannot be undone. This will permanently delete your account and remove all of your book
+                    data.</p>
+                <p>Please type your User ID <strong>{{ current_user.userid }}</strong> to confirm.</p>
+                <form id="deleteAccountForm" method="POST" action="{{ url_for('delete_account') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <input type="text" id="confirmUserId" class="form-control" placeholder="Enter your User ID">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" id="confirmDeleteBtn" class="btn btn-danger" disabled>I understand, delete my
+                    account</button>
             </div>
         </div>
     </div>
@@ -122,30 +190,5 @@
 {% endblock %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
-<script>
-const correctUserId = "{{ current_user.userid }}";
-document.addEventListener('DOMContentLoaded', function() {
-    const deleteModal = document.getElementById('deleteAccountModal');
-    if (!deleteModal) return;
-
-    const confirmInput = deleteModal.querySelector('#confirmUserId');
-    const confirmBtn = deleteModal.querySelector('#confirmDeleteBtn');
-    const deleteForm = deleteModal.querySelector('#deleteAccountForm');
-
-    if(confirmInput && confirmBtn && deleteForm){
-        confirmInput.addEventListener('input', () => {
-            if (confirmInput.value === correctUserId) {
-                confirmBtn.disabled = false;
-            } else {
-                confirmBtn.disabled = true;
-            }
-        });
-
-        confirmBtn.addEventListener('click', () => {
-            deleteForm.submit();
-        });
-    }
-});
-</script>
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
 {% endblock %}

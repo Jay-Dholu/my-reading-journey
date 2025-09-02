@@ -28,7 +28,8 @@
                 <div class="search-container">
                     <div class="search-box">
                         <i class="bx bx-search"></i>
-                        <input type="text" id="searchBar" placeholder="Search books or authors..." onkeyup="filterBooks()">
+                        <input type="text" id="searchBar" placeholder="Search books or authors..."
+                            onkeyup="filterBooks()">
                     </div>
                 </div>
 
@@ -102,10 +103,10 @@
                             title="Edit Book">
                             <i class="bx bx-edit"></i>
                         </a>
-                        <a href="{{ url_for('delete_book', book_id=book.id) }}" class="action-btn delete-btn"
-                            title="Delete Book" onclick="return confirm('Are you sure you want to delete this book?')">
+                        <button type="button" class="action-btn delete-btn" title="Delete Book"
+                            onclick="openDeleteModal('{{ url_for('delete_book', book_id=book.id) }}', '{{ book.title }}')">
                             <i class="bx bx-trash"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
             </article>
@@ -155,8 +156,8 @@
                     <i class="bx bx-star"></i>
                 </div>
                 <div class="stat-content">
-                    <div class="stat-label">Avg Rating</div>
                     <div class="stat-number">
+                        <div class="stat-label">Avg Rating</div>
                         {% set rated_books = books|selectattr('rating')|selectattr('rating', '>', 0)|list %}
                         {% if rated_books %}
                         {{ "%.1f"|format(rated_books|sum(attribute='rating') / rated_books|length) }}
@@ -194,4 +195,31 @@
     {% endif %}
     {% endif %}
 </div>
+
+<div class="modal-overlay" id="deleteModal" style="display: none;">
+    <div class="modal-content modern-modal">
+        <div class="modal-header">
+            <div class="modal-title-container">
+                <i class="bx bx-error"></i>
+                <h3 class="modal-title">Confirm Deletion</h3>
+            </div>
+            <button type="button" class="modal-close" onclick="closeDeleteModal()">
+                <i class="bx bx-x"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to permanently delete <strong id="bookNameToDelete">this book</strong>?</p>
+            <p class="modal-warning">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+            <a id="confirmDeleteLink" href="#" class="btn btn-danger">Delete Book</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}

@@ -172,8 +172,10 @@
                                         <span class="file-types">PNG, JPG, JPEG up to 10MB</span>
                                     </div>
                                 </div>
-                                {{ form.cover_image(class="file-input", accept="image/*") }}
                             </div>
+                            <!-- FIX: Moved file input outside of the clickable zone -->
+                            {{ form.cover_image(class="file-input", accept="image/*", style="display:none;") }}
+                            
                             <div class="image-preview" id="imagePreview" style="display: none;">
                                 <img id="previewImg" src="" alt="Cover preview">
                                 <button type="button" class="remove-image" onclick="removeImage()">

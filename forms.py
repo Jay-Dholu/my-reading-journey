@@ -5,12 +5,13 @@ from flask_wtf import FlaskForm
 from decimal import Decimal
 from models import User
 
+
 class SignUp(FlaskForm):
-    name = StringField(label='Name', validators=[DataRequired()])
-    userid = StringField(label='User ID', validators=[DataRequired(), Length(2, 20)])
-    email = EmailField(label='Email', validators=[DataRequired(), Email()])
-    password = PasswordField(label='Password', validators=[DataRequired(), Length(8, 30)])
-    confirm_password = PasswordField(label='Confirm Password', validators=[DataRequired(), Length(8, 30), EqualTo('password', message="Passwords didn't matched!")])
+    name = StringField(label='Name', validators=[DataRequired(message="Name is required!")])
+    userid = StringField(label='User ID', validators=[DataRequired(message="User ID is required!"), Length(2, 20)])
+    email = EmailField(label='Email', validators=[DataRequired(message="Email is required!"), Email()])
+    password = PasswordField(label='Password', validators=[DataRequired(message="Password is required!"), Length(8, 30)])
+    confirm_password = PasswordField(label='Confirm Password', validators=[DataRequired(message="Confirm Password is required!"), Length(8, 30), EqualTo('password', message="Passwords didn't matched!")])
     submit = SubmitField(label='Sign Up')
 
 
@@ -37,7 +38,7 @@ class Book(FlaskForm):
     author = StringField(label='Author')
     isbn = StringField(label='ISBN', validators=[Optional(), Length(min=10, max=20, message="An ISBN must be 10 to 20 characters long.")])
     genre = StringField(label='Genre')
-    rating = DecimalField(label='Rating', places=1, validators=[NumberRange(min=1, max=5)], default=Decimal(0))
+    rating = DecimalField(label='Rating', places=1, validators=[Optional(), NumberRange(min=0, max=5)], default=Decimal('0.0'))
     description = TextAreaField(label='Description')
     cover_image = FileField(label='Upload Book Cover', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
     reading_started = DateField(label='Date Started', validators=[Optional()])
