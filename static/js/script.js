@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeTheme();
     initializeMobileMenu();
     initializeFlashMessages();
@@ -15,16 +15,16 @@ function initializeTheme() {
     const themeToggle = document.getElementById('theme-toggle');
     const savedTheme = localStorage.getItem('theme');
     const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
+
     // Initial theme
     const initialTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
     setTheme(initialTheme);
-    
+
     // Theme toggle event listener
     if (themeToggle) {
         themeToggle.addEventListener('click', toggleTheme);
     }
-    
+
     // Listen for system theme changes
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
         if (!localStorage.getItem('theme')) {
@@ -56,9 +56,9 @@ function toggleTheme() {
 function initializeMobileMenu() {
     const mobileToggle = document.getElementById('mobile-menu-toggle');
     const mobileNav = document.getElementById('mobile-nav');
-    
+
     if (mobileToggle && mobileNav) {
-        mobileToggle.addEventListener('click', function(event) {
+        mobileToggle.addEventListener('click', function (event) {
             event.stopPropagation();
             mobileNav.classList.toggle('show');
             mobileToggle.classList.toggle('active');
@@ -94,7 +94,7 @@ function initializeScrollEffects() {
     let lastScrollTop = 0;
     const navbar = document.querySelector('.navbar');
     if (navbar) {
-        window.addEventListener('scroll', function() {
+        window.addEventListener('scroll', function () {
             const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
             if (currentScrollTop > lastScrollTop && currentScrollTop > navbar.offsetHeight) {
                 // Scrolling down
@@ -126,7 +126,7 @@ function filterBooks() {
     const bookCards = document.querySelectorAll('.book-card');
     const noResults = document.getElementById('noResults');
     let visibleCount = 0;
-    
+
     bookCards.forEach(card => {
         const title = card.getAttribute('data-title') || '';
         const author = card.getAttribute('data-author') || '';
@@ -138,7 +138,7 @@ function filterBooks() {
             card.style.display = 'none';
         }
     });
-    
+
     if (noResults) {
         noResults.style.display = visibleCount === 0 ? 'block' : 'none';
     }
@@ -147,21 +147,21 @@ function filterBooks() {
 function sortBooks() {
     const sortValue = document.getElementById('sortBy').value;
     if (!sortValue) return;
-    
+
     const bookGrid = document.getElementById('bookGrid');
     if (!bookGrid) return;
-    
+
     const bookCards = Array.from(bookGrid.querySelectorAll('.book-card'));
     const [field, direction] = sortValue.split('-');
-    
+
     bookCards.sort((a, b) => {
         const valueA = a.getAttribute(`data-${field}`) || '';
         const valueB = b.getAttribute(`data-${field}`) || '';
-        
+
         const comparison = valueA.localeCompare(valueB, undefined, { numeric: true });
         return direction === 'desc' ? -comparison : comparison;
     });
-    
+
     bookCards.forEach(card => bookGrid.appendChild(card));
 }
 
@@ -176,7 +176,7 @@ function initializeAnimations() {
             }
         });
     }, { threshold: 0.1 });
-    
+
     document.querySelectorAll('.book-card, .stat-card, .empty-state').forEach(el => {
         el.classList.add('fade-in-init');
         observer.observe(el);
@@ -185,19 +185,15 @@ function initializeAnimations() {
 
 
 function initializeUploadModal() {
-    // Correctly select elements by their IDs
     const uploadModal = document.getElementById('uploadModal');
     const uploadForm = document.getElementById('uploadForm');
     const uploadSubmitBtn = document.getElementById('uploadSubmitBtn');
+    const uploadArea = uploadModal.querySelector('.upload-area');
+    const fileInput = uploadModal.querySelector('.file-input');
+    const uploadText = uploadModal.querySelector('.upload-text');
 
-    // These can remain as they are, they were likely correct
-    const uploadArea = document.querySelector('.upload-area');
-    const fileInput = document.querySelector('.file-input');
-    const uploadText = document.querySelector('.upload-text');
-
-    // Ensure all elements exist before adding listeners
     if (uploadModal && uploadForm && uploadSubmitBtn && uploadArea && fileInput && uploadText) {
-        
+
         uploadArea.addEventListener('click', () => {
             fileInput.click();
         });

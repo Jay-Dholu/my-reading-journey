@@ -68,7 +68,7 @@ def send_verification_email(user):
 @app.before_request
 def check_user_session():
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
+        user = db.session.get(User, session['user_id'])
         if not user:
             session.clear()
             flash("Your session was invalid and has been cleared. Please log in again.", "warning")
@@ -78,7 +78,7 @@ def check_user_session():
 def inject_user():
     current_user = None
     if 'user_id' in session:
-        current_user = User.query.get(session['user_id'])
+        current_user = db.session.get(User, session['user_id'])
     return dict(current_user=current_user)
 
 
@@ -93,7 +93,7 @@ def home():
         flash("Please log in to add a book.", "warning")
         return redirect(url_for('login'))
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, session['user_id'])
 
     if user:
         books = Record.query.filter_by(user_id=user.id).order_by(Record.reading_started.asc()).all()
@@ -282,10 +282,10 @@ def delete_account():
         flash("You must be logged in to perform this action.", "warning")
         return redirect(url_for('login'))
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, session['user_id'])
     if user:
-        Record.query.filter_by(user_id=user.id).delete()   # First, delete all books associated with the user
-        
+        db.session.query(Record).filter_by(user_id=user.id).delete()   # First, delete all books associated with the user
+
         db.session.delete(user)     # Then, delete the user
         db.session.commit()
 

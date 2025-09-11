@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeFormInputs();
     initializeFileUpload();
     initializeStarRating();
@@ -13,11 +13,11 @@ function initializeFormInputs() {
             input.closest('.input-group').classList.add('has-value');
         }
 
-        input.addEventListener('focus', function() {
+        input.addEventListener('focus', function () {
             this.closest('.input-group').classList.add('focused');
         });
 
-        input.addEventListener('blur', function() {
+        input.addEventListener('blur', function () {
             this.closest('.input-group').classList.remove('focused');
             if (this.value && this.value.trim() !== '') {
                 this.closest('.input-group').classList.add('has-value');
@@ -26,7 +26,7 @@ function initializeFormInputs() {
             }
         });
 
-        input.addEventListener('input', function() {
+        input.addEventListener('input', function () {
             if (this.value && this.value.trim() !== '') {
                 this.closest('.input-group').classList.add('has-value');
             } else {
@@ -37,55 +37,58 @@ function initializeFormInputs() {
 }
 
 function initializeFileUpload() {
-    const uploadZone = document.getElementById('uploadZone');
-    const fileInput = document.querySelector('.file-input');
-    const imagePreview = document.getElementById('imagePreview');
+    const fileUploadArea = document.querySelector('.file-upload-area');
+    if (!fileUploadArea) return; // Stop if this element isn't on the page
+
+    const uploadZone = fileUploadArea.querySelector('#uploadZone');
+    const fileInput = fileUploadArea.querySelector('.file-input');
+    const imagePreview = fileUploadArea.querySelector('#imagePreview');
     const previewImg = document.getElementById('previewImg');
     const removeImageBtn = document.querySelector('.remove-image');
 
-    if(uploadZone) {
-      uploadZone.addEventListener('click', () => fileInput.click());
+    if (uploadZone) {
+        uploadZone.addEventListener('click', () => fileInput.click());
     }
 
-    if(uploadZone) {
-      uploadZone.addEventListener('dragover', function(e) {
-          e.preventDefault();
-          this.classList.add('dragover');
-      });
+    if (uploadZone) {
+        uploadZone.addEventListener('dragover', function (e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
 
-      uploadZone.addEventListener('dragleave', function(e) {
-          e.preventDefault();
-          this.classList.remove('dragover');
-      });
+        uploadZone.addEventListener('dragleave', function (e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
 
-      uploadZone.addEventListener('drop', function(e) {
-          e.preventDefault();
-          this.classList.remove('dragover');
-          
-          const files = e.dataTransfer.files;
-          if (files.length > 0) {
-              fileInput.files = files;
-              handleFileSelect(files[0]);
-          }
-      });
+        uploadZone.addEventListener('drop', function (e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                handleFileSelect(files[0]);
+            }
+        });
     }
 
-    if(fileInput) {
-      fileInput.addEventListener('change', function(e) {
-          if (e.target.files.length > 0) {
-              handleFileSelect(e.target.files[0]);
-          }
-      });
+    if (fileInput) {
+        fileInput.addEventListener('change', function (e) {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
     }
 
-    if(removeImageBtn) {
-      removeImageBtn.addEventListener('click', removeImage);
+    if (removeImageBtn) {
+        removeImageBtn.addEventListener('click', removeImage);
     }
 
     function handleFileSelect(file) {
         if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 previewImg.src = e.target.result;
                 uploadZone.style.display = 'none';
                 imagePreview.style.display = 'block';
@@ -95,9 +98,9 @@ function initializeFileUpload() {
     }
 
     function removeImage() {
-        if(uploadZone) uploadZone.style.display = 'block';
-        if(imagePreview) imagePreview.style.display = 'none';
-        if(fileInput) fileInput.value = '';
+        if (uploadZone) uploadZone.style.display = 'block';
+        if (imagePreview) imagePreview.style.display = 'none';
+        if (fileInput) fileInput.value = '';
     }
 }
 
@@ -160,7 +163,7 @@ function initializeStarRating() {
         hiddenInput.value = newRating.toFixed(1);
         updateRatingDisplay(newRating);
     }
-    
+
     function updateRatingDisplay(rating) {
         ratingValueDisplay.textContent = rating.toFixed(1);
         ratingText.textContent = ratingTexts[Math.round(rating)] || ratingTexts[0];
@@ -168,7 +171,7 @@ function initializeStarRating() {
         stars.forEach((star, index) => {
             const starFill = star.querySelector('.bxs-star');
             const turn = index + 1;
-            
+
             if (turn <= rating) {
                 starFill.style.width = '100%';
             } else if (turn > rating && turn - 1 < rating) {

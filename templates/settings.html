@@ -190,5 +190,45 @@
 {% endblock %}
 
 {% block script %}
-<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // --- Section Navigation ---
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                sections.forEach(section => section.classList.remove('active'));
+
+                item.classList.add('active');
+                const sectionId = item.dataset.section;
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // --- Delete Account Modal Logic (Corrected) ---
+        const deleteModal = document.getElementById('deleteAccountModal');
+        if (deleteModal) {
+            const confirmInput = deleteModal.querySelector('#confirmUserId');
+            const confirmBtn = deleteModal.querySelector('#confirmDeleteBtn');
+            const deleteForm = deleteModal.querySelector('#deleteAccountForm');
+            const correctUserId = "{{ current_user.userid }}";
+
+            if (confirmInput && confirmBtn && deleteForm) {
+                confirmInput.addEventListener('input', () => {
+                    // Enable the button only if the input matches the user's User ID
+                    confirmBtn.disabled = confirmInput.value.trim() !== correctUserId;
+                });
+
+                confirmBtn.addEventListener('click', () => {
+                    // When the confirmation button is clicked, submit the form
+                    if (!confirmBtn.disabled) {
+                        deleteForm.submit();
+                    }
+                });
+            }
+        }
+    });
+</script>
 {% endblock %}
