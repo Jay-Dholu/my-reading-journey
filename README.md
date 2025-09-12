@@ -20,8 +20,7 @@ The goal is to have a simple personal library where you can see your progress, r
 
 ## Possible Improvements 
 - Import/export your collection, i.e., your books data in csv.  
-- Forgot password and reset.
-- New details to log a book.
+- New details to add a book.
 
 
 ## Tech Stack  
@@ -32,13 +31,12 @@ The goal is to have a simple personal library where you can see your progress, r
 - Jinja Templates  
 
 ### Backend  
-- Flask  
-- SQLAlchemy  
+- Flask
 - WTForms  
 - Werkzeug  
 
 ### Database  
-- SQLite (default, easy to set up)
+- MongoDB
 
 
 # About Me
