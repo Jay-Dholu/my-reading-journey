@@ -71,3 +71,17 @@
   color: white;
   transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+    .about-page, .developer-page {
+        padding: 1rem;
+    }
+
+    .about-page h1, .developer-page h1 {
+        font-size: 2rem;
+    }
+    
+    .about-page h2, .developer-page h2 {
+        font-size: 1.5rem;
+    }
+}

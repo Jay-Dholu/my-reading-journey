@@ -565,120 +565,17 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .auth-wrapper {
-    grid-template-columns: 1fr;
-    min-height: auto;
-  }
-
-  .auth-visual {
-    padding: 2rem;
-    min-height: 300px;
-  }
-
-  .visual-text h2 {
-    font-size: 2rem;
-  }
-
-  .visual-text p {
-    font-size: 1rem;
-  }
-
-  .book-stack {
-    height: 80px;
-    margin-bottom: 1.5rem;
-  }
-
-  .book-1,
-  .book-2,
-  .book-3,
-  .book-4 {
-    width: 1.5rem;
-  }
-
-  .book-1 {
-    height: 2rem;
-  }
-
-  .book-2 {
-    height: 3rem;
-  }
-
-  .book-3 {
-    height: 2.5rem;
-  }
-
-  .book-4 {
-    height: 3.5rem;
-  }
-
-  .auth-form-container {
-    padding: 2rem;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .form-options {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .element {
-    font-size: 1.5rem;
-  }
+  .auth-wrapper { grid-template-columns: 1fr; }
+  .auth-visual { display: none; } 
+  .auth-form-container { padding: 2rem; }
+  .auth-header h1 { font-size: 1.75rem; }
 }
 
 @media (max-width: 480px) {
-  .auth-container {
-    padding: 1rem;
-  }
-
-  .auth-wrapper {
-    border-radius: var(--radius-xl);
-  }
-
-  .auth-visual {
-    padding: 1.5rem;
-    min-height: 250px;
-  }
-
-  .visual-text h2 {
-    font-size: 1.75rem;
-  }
-
-  .auth-form-container {
-    padding: 1.5rem;
-  }
-
-  .auth-header h1 {
-    font-size: 1.75rem;
-  }
-
-  .form-input {
-    height: 3rem;
-    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
-  }
-
-  .form-label {
-    left: 2.5rem;
-    font-size: 0.9rem;
-  }
-
-  .input-icon {
-    left: 0.75rem;
-    font-size: 1.125rem;
-  }
-
-  .password-toggle {
-    right: 0.75rem;
-  }
-
-  .btn-full {
-    height: 3rem;
-  }
+  .auth-container { padding: 1rem 0; }
+  .auth-wrapper { border-radius: 0; box-shadow: none; }
+  .auth-form-container { padding: 1.5rem; }
+  .form-row { grid-template-columns: 1fr; }
 }
 
 

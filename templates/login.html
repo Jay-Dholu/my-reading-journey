@@ -100,6 +100,15 @@
                     <a href="{{ url_for('sign_up') }}" class="auth-link">Create one now</a>
                 </p>
             </div>
+            <div class="text-center mt-4 font-sm">
+                <p>
+                    Email expired or didn't arrive?
+                    <br>
+                    <a href="{{ url_for('resend_verification') }}">
+                        Resend verification email
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 </div>
