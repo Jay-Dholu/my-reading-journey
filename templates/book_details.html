@@ -14,7 +14,7 @@
         </div>
         <div class="details-hero-visual">
             {% if book.cover_image %}
-            <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}" alt="{{ book.title }} Cover"
+            <img src="{{ book.cover_image }}" alt="{{ book.title }} Cover"
                 class="hero-cover-img">
             {% else %}
             <div class="book-icon">

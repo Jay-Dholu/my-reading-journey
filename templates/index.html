@@ -59,8 +59,7 @@
 
                 <div class="book-cover">
                     {% if book.cover_image %}
-                    <img src="{{ url_for('static', filename='uploads/' + book.cover_image) }}"
-                        alt="{{ book.title }} Cover" class="cover-image">
+                    <img src="{{ book.cover_image }}" alt="{{ book.title }} Cover" class="cover-image">
                     {% else %}
                     <div class="cover-placeholder">
                         <i class="bx bx-book"></i>
@@ -207,14 +206,17 @@
                 <i class="bx bx-x"></i>
             </button>
         </div>
-        <div class="modal-body">
-            <p>Are you sure you want to permanently delete <strong id="bookNameToDelete">this book</strong>?</p>
-            <p class="modal-warning">This action cannot be undone.</p>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-            <a id="confirmDeleteLink" href="#" class="btn btn-danger">Delete Book</a>
-        </div>
+        <form id="deleteForm" method="POST" action="">
+            <div class="modal-body">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <p>Are you sure you want to permanently delete <strong id="bookNameToDelete">this book</strong>?</p>
+                <p class="modal-warning">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete Book</button>
+            </div>
+        </form>
     </div>
 </div>
 
