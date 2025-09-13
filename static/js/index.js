@@ -1,11 +1,25 @@
 function openDeleteModal(deleteUrl, bookTitle) {
-    document.getElementById('bookNameToDelete').textContent = `"${bookTitle}"`;
-    document.getElementById('confirmDeleteLink').href = deleteUrl;
-    document.getElementById('deleteModal').style.display = 'flex';
+    const deleteForm = document.getElementById('deleteForm');
+    if(deleteForm) {
+        deleteForm.action = deleteUrl;
+    }
+    
+    const bookNameElement = document.getElementById('bookNameToDelete');
+    if(bookNameElement) {
+        bookNameElement.textContent = `"${bookTitle}"`;
+    }
+
+    const modal = document.getElementById('deleteModal');
+    if(modal) {
+        modal.style.display = 'flex';
+    }
 }
 
 function closeDeleteModal() {
-    document.getElementById('deleteModal').style.display = 'none';
+    const modal = document.getElementById('deleteModal');
+    if(modal) {
+        modal.style.display = 'none';
+    }
 }
 
 window.onclick = function(event) {

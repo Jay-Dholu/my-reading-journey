@@ -12,8 +12,10 @@ from markupsafe import Markup
 from werkzeug.security import check_password_hash, generate_password_hash
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+import certifi
 import cloudinary
 import cloudinary.uploader
+from cloudinary.exceptions import Error as CloudinaryError
 
 from forms import Book, Login, SignUp, Data, RequestReset, ResetPassword, ResendVerification, EditProfile
 
@@ -21,10 +23,13 @@ load_dotenv('.env')
 
 app = Flask(__name__)
 
+# --- App Configuration ---
 SECRET_KEY = os.environ.get('SECRET_KEY')
 EMAIL = os.environ.get('EMAIL')
 PASSWORD = os.environ.get('PASSWORD')
 MONGO_URI = os.environ.get('MONGO_URI')
+
+# Cloudinary Configuration
 CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
 CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
 CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
@@ -41,14 +46,16 @@ app.config['MAIL_USERNAME'] = EMAIL
 app.config['MAIL_PASSWORD'] = PASSWORD
 app.config['MAIL_DEFAULT_SENDER'] = EMAIL
 
+# --- Cloudinary Setup ---
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
     api_key=CLOUDINARY_API_KEY,
     api_secret=CLOUDINARY_API_SECRET
 )
 
+# --- Database Connection ---
 try:
-    client = MongoClient(MONGO_URI)
+    client = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
     db = client.myreadingjourney
     users_collection = db.users
     books_collection = db.books
@@ -335,9 +342,12 @@ def add_book():
     if form.validate_on_submit():
         cover_image_url = None
         if form.cover_image.data:
-            # Upload to Cloudinary
-            upload_result = cloudinary.uploader.upload(form.cover_image.data)
-            cover_image_url = upload_result['secure_url']
+            try:
+                upload_result = cloudinary.uploader.upload(form.cover_image.data)
+                cover_image_url = upload_result['secure_url']
+            except CloudinaryError as e:
+                flash(f"Image upload failed: {e.message}", "danger")
+                return render_template("add_book.html", title="Add Book", form=form, json_form=Data())
 
         new_book = {
             "title": form.title.data,
@@ -346,7 +356,7 @@ def add_book():
             "genre": form.genre.data,
             "rating": float(form.rating.data) if form.rating.data else 0.0,
             "description": form.description.data,
-            "cover_image": cover_image_url, # Save the URL
+            "cover_image": cover_image_url,
             "reading_started": datetime.combine(form.reading_started.data, datetime.min.time()) if form.reading_started.data else None,
             "reading_finished": datetime.combine(form.reading_finished.data, datetime.min.time()) if form.reading_finished.data else None,
             "user_id": ObjectId(session.get('user_id')),
@@ -383,9 +393,12 @@ def edit_book(book_id):
             "reading_finished": datetime.combine(form.reading_finished.data, datetime.min.time()) if form.reading_finished.data else None,
         }
         if form.cover_image.data:
-            # Upload new image to Cloudinary
-            upload_result = cloudinary.uploader.upload(form.cover_image.data)
-            update_data['cover_image'] = upload_result['secure_url']
+            try:
+                upload_result = cloudinary.uploader.upload(form.cover_image.data)
+                update_data['cover_image'] = upload_result['secure_url']
+            except CloudinaryError as e:
+                flash(f"Image upload failed: {e.message}", "danger")
+                return render_template("edit_book.html", title=f'Edit {book["title"]}', form=form, book=book, json_form=Data())
 
         books_collection.update_one({'_id': book_oid}, {'$set': update_data})
         flash("Book updated successfully!", "success")
