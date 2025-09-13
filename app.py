@@ -13,7 +13,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import certifi
+import ssl
 
 from forms import Book, Login, SignUp, Data, RequestReset, ResetPassword, ResendVerification, EditProfile
 
@@ -42,13 +42,13 @@ app.config['MAIL_DEFAULT_SENDER'] = EMAIL
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 try:
-    client = MongoClient(MONGO_URI, tlsCAFile=certifi.where(), tlsAllowInvalidCertificates=True)
+    client = MongoClient(MONGO_URI)
+    client.admin.command('ping')
     db = client.myreadingjourney
     users_collection = db.users
     books_collection = db.books
     users_collection.create_index("email", unique=True)
     users_collection.create_index("userid", unique=True)
-    client.admin.command('ping')
     print("Successfully connected to MongoDB Atlas!")
 except Exception as e:
     print(f"Error: Could not connect to MongoDB Atlas. Check your MONGO_URI. \n{e}")
