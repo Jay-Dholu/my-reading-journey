@@ -13,7 +13,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-import ssl
 
 from forms import Book, Login, SignUp, Data, RequestReset, ResetPassword, ResendVerification, EditProfile
 

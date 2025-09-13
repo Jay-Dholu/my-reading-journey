@@ -72,7 +72,7 @@
                 <div class="book-content">
                     <div class="book-info">
                         <h3 class="book-title">
-                            <a href="{{ url_for('view_book', book_id=book.id) }}">{{ book.title }}</a>
+                            <a href="{{ url_for('view_book', book_id=book._id) }}">{{ book.title }}</a>
                         </h3>
 
                         {% if book.author %}
@@ -95,16 +95,16 @@
                     {% endif %}
 
                     <div class="book-actions">
-                        <a href="{{ url_for('view_book', book_id=book.id) }}" class="action-btn view-btn"
+                        <a href="{{ url_for('view_book', book_id=book._id) }}" class="action-btn view-btn"
                             title="View Details">
                             <i class="bx bx-show"></i>
                         </a>
-                        <a href="{{ url_for('edit_book', book_id=book.id) }}" class="action-btn edit-btn"
+                        <a href="{{ url_for('edit_book', book_id=book._id) }}" class="action-btn edit-btn"
                             title="Edit Book">
                             <i class="bx bx-edit"></i>
                         </a>
                         <button type="button" class="action-btn delete-btn" title="Delete Book"
-                            onclick="openDeleteModal('{{ url_for('delete_book', book_id=book.id) }}', '{{ book.title }}')">
+                            onclick="openDeleteModal('{{ url_for('delete_book', book_id=book._id) }}', '{{ book.title }}')">
                             <i class="bx bx-trash"></i>
                         </button>
                     </div>
