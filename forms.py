@@ -3,7 +3,6 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length, NumberRange
 from flask_wtf.file import FileAllowed, FileRequired
 from flask_wtf import FlaskForm
 from decimal import Decimal
-from models import User
 
 
 class SignUp(FlaskForm):
@@ -22,14 +21,12 @@ class Login(FlaskForm):
     submit = SubmitField(label='Login')
 
     def validate(self, extra_validators=None):
-        # Call the default validator
         if not super().validate():
             return False
-
-        # My custom logic to ensure at least one of email or userid is filled, else this will not let user proceed
         if not self.email.data and not self.userid.data:
-            raise ValidationError("Either Email or User ID must be filled.")
-
+            self.email.errors.append("Either Email or User ID must be filled.")
+            self.userid.errors.append("Either Email or User ID must be filled.")
+            return False
         return True
 
 
@@ -40,7 +37,7 @@ class Book(FlaskForm):
     genre = StringField(label='Genre')
     rating = DecimalField(label='Rating', places=1, validators=[Optional(), NumberRange(min=0, max=5)], default=Decimal('0.0'))
     description = TextAreaField(label='Description')
-    cover_image = FileField(label='Upload Book Cover', validators=[FileAllowed(['jpg', 'jpeg', 'png'])])
+    cover_image = FileField(label='Upload Book Cover', validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'])])
     reading_started = DateField(label='Date Started', validators=[Optional()])
     reading_finished = DateField(label='Date Finished', validators=[Optional()])
     submit = SubmitField('Add Book')
@@ -77,17 +74,3 @@ class EditProfile(FlaskForm):
     password = PasswordField(label='New Password', validators=[Optional(), Length(8, 30)])
     confirm_password = PasswordField(label='Confirm Password', validators=[Optional(), EqualTo('password', message="Passwords didn't match!")])
     submit = SubmitField(label='Update Profile')
-
-    def validate_email(self, email):
-        current_user_id = self.meta.current_user_id
-        user = User.query.filter_by(email=email.data).first()
-
-        if user and user.id != current_user_id:
-            raise ValidationError('This Email Address is already taken. Please choose another one.')
-        
-    def validate_userid(self, userid):
-        current_user_id = self.meta.current_user_id
-        user = User.query.filter_by(userid=userid.data).first()
-
-        if user and user.id != current_user_id:
-            raise ValidationError('This User ID is already taken. Please choose another one.')
