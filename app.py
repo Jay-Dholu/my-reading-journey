@@ -10,10 +10,8 @@ from flask_mail import Mail, Message
 from markupsafe import Markup
 
 from werkzeug.security import check_password_hash, generate_password_hash
-from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
-
 import cloudinary
 import cloudinary.uploader
 
@@ -32,19 +30,16 @@ CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
 CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
 
 if not MONGO_URI:
-    raise ValueError("MONGO_URI environment variable is not set! Please add it to your .env file and Render environment.")
+    raise ValueError("MONGO_URI environment variable is not set!")
 
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
-app.config['UPLOAD_FOLDER'] = os.path.join('static', 'uploads')
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = EMAIL
 app.config['MAIL_PASSWORD'] = PASSWORD
 app.config['MAIL_DEFAULT_SENDER'] = EMAIL
-
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
 cloudinary.config(
     cloud_name=CLOUDINARY_CLOUD_NAME,
@@ -54,12 +49,12 @@ cloudinary.config(
 
 try:
     client = MongoClient(MONGO_URI)
-    client.admin.command('ping')
     db = client.myreadingjourney
     users_collection = db.users
     books_collection = db.books
     users_collection.create_index("email", unique=True)
     users_collection.create_index("userid", unique=True)
+    client.admin.command('ping')
     print("Successfully connected to MongoDB Atlas!")
 except Exception as e:
     print(f"Error: Could not connect to MongoDB Atlas. Check your MONGO_URI. \n{e}")
@@ -251,9 +246,9 @@ def settings():
         email_changed = form.email.data != user['email']
         userid_changed = form.userid.data != user['userid']
 
-        if email_changed and users_collection.find_one({'email': form.email.data}):
+        if email_changed and users_collection.find_one({'email': form.email.data, '_id': {'$ne': user_oid}}):
             flash('This Email Address is already taken. Please choose another one.', 'danger')
-        elif userid_changed and users_collection.find_one({'userid': form.userid.data}):
+        elif userid_changed and users_collection.find_one({'userid': form.userid.data, '_id': {'$ne': user_oid}}):
             flash('This User ID is already taken. Please choose another one.', 'danger')
         else:
             update_data = {
@@ -338,11 +333,11 @@ def add_book():
 
     form = Book()
     if form.validate_on_submit():
-        filename = None
+        cover_image_url = None
         if form.cover_image.data:
-            image = form.cover_image.data
-            filename = secure_filename(image.filename)
-            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            # Upload to Cloudinary
+            upload_result = cloudinary.uploader.upload(form.cover_image.data)
+            cover_image_url = upload_result['secure_url']
 
         new_book = {
             "title": form.title.data,
@@ -351,7 +346,7 @@ def add_book():
             "genre": form.genre.data,
             "rating": float(form.rating.data) if form.rating.data else 0.0,
             "description": form.description.data,
-            "cover_image": filename,
+            "cover_image": cover_image_url, # Save the URL
             "reading_started": datetime.combine(form.reading_started.data, datetime.min.time()) if form.reading_started.data else None,
             "reading_finished": datetime.combine(form.reading_finished.data, datetime.min.time()) if form.reading_finished.data else None,
             "user_id": ObjectId(session.get('user_id')),
@@ -388,9 +383,9 @@ def edit_book(book_id):
             "reading_finished": datetime.combine(form.reading_finished.data, datetime.min.time()) if form.reading_finished.data else None,
         }
         if form.cover_image.data:
-            filename = secure_filename(form.cover_image.data.filename)
-            form.cover_image.data.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            update_data["cover_image"] = filename
+            # Upload new image to Cloudinary
+            upload_result = cloudinary.uploader.upload(form.cover_image.data)
+            update_data['cover_image'] = upload_result['secure_url']
 
         books_collection.update_one({'_id': book_oid}, {'$set': update_data})
         flash("Book updated successfully!", "success")
