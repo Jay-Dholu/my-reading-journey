@@ -14,6 +14,9 @@ from werkzeug.utils import secure_filename
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
+import cloudinary
+import cloudinary.uploader
+
 from forms import Book, Login, SignUp, Data, RequestReset, ResetPassword, ResendVerification, EditProfile
 
 load_dotenv('.env')
@@ -24,6 +27,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 EMAIL = os.environ.get('EMAIL')
 PASSWORD = os.environ.get('PASSWORD')
 MONGO_URI = os.environ.get('MONGO_URI')
+CLOUDINARY_CLOUD_NAME = os.environ.get('CLOUDINARY_CLOUD_NAME')
+CLOUDINARY_API_KEY = os.environ.get('CLOUDINARY_API_KEY')
+CLOUDINARY_API_SECRET = os.environ.get('CLOUDINARY_API_SECRET')
 
 if not MONGO_URI:
     raise ValueError("MONGO_URI environment variable is not set! Please add it to your .env file and Render environment.")
@@ -39,6 +45,12 @@ app.config['MAIL_PASSWORD'] = PASSWORD
 app.config['MAIL_DEFAULT_SENDER'] = EMAIL
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+cloudinary.config(
+    cloud_name=CLOUDINARY_CLOUD_NAME,
+    api_key=CLOUDINARY_API_KEY,
+    api_secret=CLOUDINARY_API_SECRET
+)
 
 try:
     client = MongoClient(MONGO_URI)
